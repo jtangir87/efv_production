@@ -38,8 +38,8 @@ class Dashboard(ListView):
         return context
 
 
-class Public(TemplateView):
-    template_name = 'index.html'
+class SignUpComplete(TemplateView):
+    template_name = 'signup_complete.html'
     
 
 
@@ -89,7 +89,7 @@ def trialsignup(request):
                 headers = {'Reply-To': email }
             )
             email.send()
-            return redirect('/')
+            return redirect('signup_complete')
 
     return render(request, 'index.html', {
         'form': form_class,
