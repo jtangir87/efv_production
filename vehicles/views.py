@@ -65,6 +65,7 @@ class DeleteVehicle(DeleteView):
 # DAMAGE REPORT VIEWS
 class DamageList(ListView):
     model = DamageReport
+    paginate_by = 25
 
 def new_damage(request):
     ImageFormset = modelformset_factory(DamageImages, fields=('image',), extra=5)

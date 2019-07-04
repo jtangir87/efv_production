@@ -1,10 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.views.generic import TemplateView, ListView, TemplateView, CreateView
 from fuellog.models import FuelEntry
 from vehicles.models import Vehicle, DamageReport
 from service.models import ServiceRecord
+from .forms import TrialSignUpForm
 from django_tenants.utils import remove_www
-
+from django.core.mail import EmailMessage
+from django.template.loader import get_template
 from django.db.models import Sum
 from datetime import datetime
 from django.http import HttpResponse
@@ -42,4 +44,54 @@ class Public(TemplateView):
 
 
 
+
+def trialsignup(request):
+    form_class = TrialSignUpForm
+
+    if request.method == 'POST':
+        form = form_class(data=request.POST)
+
+        if form.is_valid():
+            first_name = request.POST.get(
+                'first_name'
+            , '')
+            last_name = request.POST.get(
+                'last_name'
+            , '')    
+            company_name = request.POST.get(
+                'company_name'
+            , '')                   
+            email = request.POST.get(
+                'email'
+            , '')
+            phone_number = request.POST.get(
+                'phone_number'
+            , '')            
+            form_content = request.POST.get('content', '')
+
+            # Email the profile with the
+            # contact information
+            template = get_template('trial_template.txt')
+            context = {
+                'first_name': first_name,
+                'last_name': last_name,
+                'company_name': company_name,
+                'email': email,
+                'phone_number': phone_number,
+            }
+            content = template.render(context)
+
+            email = EmailMessage(
+                "New tial sign up",
+                content,
+                "Your website" +'',
+                ['youremail@gmail.com'],
+                headers = {'Reply-To': email }
+            )
+            email.send()
+            return redirect('/')
+
+    return render(request, 'index.html', {
+        'form': form_class,
+    })
 

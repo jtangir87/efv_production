@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load static %}
-{% load el_pagination_tags %}
 {% block breadcrumb %}
 <li class="active">Damage Reports</li>
 {% endblock breadcrumb %}
@@ -20,7 +19,6 @@
           <th scope="col">Date</th>
           <th scope="col">Driver</th>
         </tr>
-      {% paginate object_list %}  
       {% for vehicle in object_list  %}
       <tr>
         <td scope="row"><a href="{% url 'vehicles:damage_detail' pk=vehicle.pk %}">{{vehicle.vehicle.name}}</a></td>
@@ -30,7 +28,6 @@
       {% empty %}
         <li class="list-group-item">No damage reported</li>
       {% endfor %}
-      {% show_pages %}
       </table>
       </div>
     </div>

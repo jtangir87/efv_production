@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 {% load humanize %}
-{% load el_pagination_tags %}
 {% block breadcrumb %}
 <li><a href="{% url 'vehicles:damage_list' %}">Damage Reports</a></li>
 <li class="active">{{vehicle.name}}</li>
