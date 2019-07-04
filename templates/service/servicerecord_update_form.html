@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'service:service_list' %}">Service</a></li>
+<li class="active">Complete</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+Service Record
+{% endblock header %}
+
+{% block content %}
+
+
+    <div class='row'>
+      <div class="col-lg-12">
+        <div class="col-md-6">
+          <div class="panel panel-primary">
+            <div class="panel-heading">{{vehicle.name}}</div>
+            <div class="panel-body">
+            {% load bootstrap4 %}
+            {% bootstrap_javascript jquery='full' %}
+            {{ form.media }}          
+                <form method="post">
+                  {% csrf_token %}
+                  {% bootstrap_form form %}
+                  {% bootstrap_button "Save" button_type="submit" button_class="btn-primary"%}
+                </form>	  
+            </div>
+          </div>  
+        </div>  
+      </div>      
+    </div><!--/.row--> 
+
+
+{% endblock content %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% block breadcrumb %}
+<li><a href="{% url 'service:service_list' %}">Service</a></li>
+<li class="active">{{vehicle.name}}</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+{{vehicle.name}}
+{% endblock header %}
+
+
+{% block content %}
+
+	<div class="row">
+  <div class="col-md-8">
+    <div class="panel panel-primary">
+      <div class="panel-heading">All Service Records
+      </div>
+    <table class='table'>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Servicer</th>
+            <th scope="col">Description</th>
+            <th scope="col">Cost</th>
+          </tr>
+          {% for servicerecord in all_serv  %}
+          {% if servicerecord.is_completed %}
+          <tr>
+            <td><a href="{% url 'service:record_detail' pk=servicerecord.pk %}">{{servicerecord.date}}</a></td>
+            <td>{{servicerecord.servicer}}</td>
+            <td>{{servicerecord.description | slice:'50'}}</td>
+            <td>${{servicerecord.cost |intcomma}}</td>
+          </tr>
+          {% endif %}
+          {% empty %}
+              <li>No entries yet</li>
+          {% endfor %}
+          
+        </table>
+      </div>
+    </div>
+    </div>
+ 
+        </div>
+    </div>
+   </div> 
+
+
+
+
+{% endblock content %}

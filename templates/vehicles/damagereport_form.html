@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'vehicles:damage_list' %}">Damage Reports</a></li>
+<li class="active">Create New</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+Create New Damage Report  
+{% endblock header %}
+
+
+{% block content %}
+<div class='row'>
+  <div class="col-lg-12">
+    <div class="col-md-6">
+      <div class="panel panel-primary">
+
+        <div class="panel-body">
+        {% load bootstrap4 %}
+        {% bootstrap_javascript jquery='full' %}
+        {{ form.media }}  
+
+        <form method="POST" action='' enctype='multipart/form-data'>
+          {% csrf_token %}
+          {% bootstrap_form form %}
+          {% bootstrap_formset formset layout='horizontal' %}
+          {% bootstrap_button "Submit" button_type="submit" button_class="btn-primary"%}
+
+        </form>
+      </div>
+    </div>  
+  </div>  
+</div>      
+</div><!--/.row--> 
+
+
+
+
+{% endblock content %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% load el_pagination_tags %}
+{% block breadcrumb %}
+<li><a href="{% url 'fuellog:entry_list' %}">Fuel Entries</a></li>
+<li class="active">{{vehicle.name}}</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+{{vehicle.name}}
+{% endblock header %}
+
+
+{% block content %}
+
+	<div class="row">
+  <div class="col-md-8">
+    <div class="panel panel-primary">
+      <div class="panel-heading">All Fuel Entries
+      </div>
+    <table class='table'>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Gallons</th>
+            <th scope="col">Cost</th>
+            <th scope="col">Mileage</th>
+          </tr>
+          {% for fuel in all_fuel  %}
+          <tr>
+            <td><a href="{% url 'fuellog:entry_detail' pk=fuel.pk %}">{{fuel.date}}</a></td>
+            <td>{{fuel.gallons}}</td>
+            <td>${{fuel.cost |intcomma}}</td>
+            <td>{{fuel.mileage |intcomma}}</td>
+          </tr>
+          {% empty %}
+              <li>No entries yet</li>
+          {% endfor %}
+          
+        </table>
+      </div>
+    </div>
+    </div>
+ 
+        </div>
+    </div>
+   </div> 
+
+
+
+
+{% endblock content %}

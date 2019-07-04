@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'service:service_list' %}">Service</a></li>
+<li class="active">Details</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+<a href="{% url 'vehicles:vehicle_detail' pk=servicerecord.vehicle.pk %}">{{servicerecord.vehicle.name }}</a> - {{servicerecord.date|default_if_none:""}}
+{% endblock header %}
+
+{% block content %}
+	<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Details</div>
+          <div class="panel-body">
+            <h5>Servicer : {{servicerecord.servicer}}</h5>
+            <h5>Invoice # : {{servicerecord.invoice}}</h5>
+            <h5>Cost : ${{servicerecord.cost  | intcomma }}</h5>
+            <h5>Mileage : {{servicerecord.mileage |default_if_none:"" | intcomma }}</h5>
+            <h5>Description : {{servicerecord.description}}</h5>
+            <h5>Logged by: {{servicerecord.user.first_name}} {{servicerecord.user.last_name}}</h5>
+            <a class="btn btn-warning" href="{% url 'service:update_record' pk=servicerecord.pk %}">Update</a>
+            {% if servicerecord.completed == False %}
+            <a class="btn btn-success" href="{% url 'service:complete_scheduled' pk=servicerecord.pk %}">Complete</a>
+            {% endif %}
+					</div>
+				</div>
+			</div>
+    </div><!-- /.row -->
+
+{% endblock content %}

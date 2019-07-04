@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% load template_filters %}
+
+{% block breadcrumb %}
+<li><a href='{% url "accounts:user_list" %}'>Users</a></li>
+<li class="active">Details</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+User Details
+{% endblock header %}
+
+{% block content %}
+	<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">{{user.get_full_name}}</div>
+          <div class="panel-body">
+          <h5>{{ user.username }}</h5>
+          <h5>Email : {{user.email |urlize }}</h5>
+          <h5>Phone Number : {{user.userprofile.phone_number|phone_number}}</h5>
+          <h5>Last Login : {{user.last_login}}</h5>
+          <h5>Date Created : {{user.date_joined}}</h5>
+          <h5>Active : 
+          {% if user.is_active == True %}
+          Yes
+          {% else %}
+          No
+          {% endif %}
+          </h5>
+          <h5>Manager : 
+          {% if user.is_staff == True %}
+          Yes
+          {% else %}
+          No
+          {% endif %}
+          </h5>
+          <a class="btn btn-warning" href="{% url 'accounts:update_user' pk=user.pk %}">Update</a>
+        
+					</div>
+				</div>
+			</div>
+    </div><!-- /.row -->
+
+{% endblock content %}

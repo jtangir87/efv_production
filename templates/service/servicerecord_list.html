@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% load el_pagination_tags %}
+{% block breadcrumb %}
+<li class="active">Service</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+Vehicle Service
+{% endblock header %}
+
+
+{% block content %}
+
+	<div class="row">
+  <div class="col-md-6">
+    <div class="panel panel-primary">
+      <div class="panel-heading">Service Records<span class="pull-right"><a class="btn btn-sm btn-primary" href="{% url 'service:create_record' %}">Create Service Record</a></span>
+      </div>
+      <div class="panel-body">
+        <table class='table'>
+          <tr>
+            <th scope="col">Vehicle</th>
+            <th scope="col">Date</th>
+            <th scope="col">Servicer</th>
+            <th scope="col">Description</th>
+          </tr>
+          {% for servicerecord in is_complete %}
+          <tr>
+            <td scope="row"><a href="{% url 'service:record_detail' pk=servicerecord.pk %}">{{servicerecord.vehicle.name}}</a></td>
+            <td>{{servicerecord.date}}</td>
+            <td>{{servicerecord.servicer}}</td>
+            <td>{{servicerecord.description | slice:'30'}}</td>
+          </tr>
+          {% empty %}
+              <li>No entries yet</li>
+          {% endfor %}
+          
+        </table>
+        <span class="pull-left"><a class="btn btn-sm btn-primary" href="{% url 'service:service_all' %}">View All</a></span>
+      </div>
+    </div>
+    </div>
+  <div class="col-md-6">
+    <div class="panel panel-primary">
+      <div class="panel-heading">Scheduled Service<span class="pull-right"><a class="btn btn-sm btn-primary" href="{% url 'service:create_scheduled' %}">Schedule New Service</a></span>
+      </div>
+      <div class="panel-body">
+        <table class='table'>
+          <tr>
+            <th scope="col">Vehicle</th>
+            <th scope="col">Due Date</th>
+            <th scope="col">Due Mileage</th>
+            <th scope="col">Description</th>
+          </tr>
+          {% for servicerecord in is_scheduled%}
+
+          <tr>
+            <td scope="row"><a href="{% url 'service:record_detail' pk=servicerecord.pk %}">{{servicerecord.vehicle.name}}</a></td>
+            {% if servicerecord != Null and servicerecord.is_past_due %}
+            <td class='past_due'>{{servicerecord.date|default_if_none:""}}</td>
+            {% else %}
+            <td>{{servicerecord.date|default_if_none:""}}</td>
+            {% endif %}
+            {% if servicerecord != Null and servicerecord.is_past_mileage %}
+            <td class='past_due'>{{servicerecord.mileage| default_if_none:""| intcomma }}</td>
+            {% else %}
+            <td>{{servicerecord.mileage | default_if_none:"" | intcomma }}</td>
+            {% endif %}
+            <td>{{servicerecord.description | slice:'20'}}</td>
+          </tr>
+
+          {% empty %}
+              <li>No entries yet</li>
+          {% endfor %}
+
+
+          </table>  
+        </div>
+    </div>
+   </div> 
+
+
+
+
+{% endblock content %}

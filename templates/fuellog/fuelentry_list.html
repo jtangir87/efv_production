@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block breadcrumb %}
+<li class="active">Fuel Log</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+Fuel Entries
+{% endblock header %}
+
+{% block content %}
+  <div class="col-md-8">
+    <div class="panel panel-primary">
+      <div class="panel-heading"><a class="btn btn-lg btn-outline-light" href="{% url 'fuellog:create_entry' %}">Add Fuel Entry</a>
+      </div>
+      <div class="panel-body">
+        <table class='table'>
+          <tr>
+            <th scope="col">Vehicle</th>
+            <th scope="col">Date</th>
+            <th scope="col">Gallons</th>
+            <th scope="col">Cost</th>
+          </tr>
+          {% for fuelentry in object_list  %}
+          <tr>
+            <td scope="row"><a href="{% url 'fuellog:entry_detail' pk=fuelentry.pk %}">{{fuelentry.vehicle.name}}</a></td>
+            <td>{{fuelentry.date|date:"m/d/y"}}</td>
+            <td>{{fuelentry.gallons}}</td>
+
+            <td>${{fuelentry.cost}}</td>
+          </tr>
+          {% empty %}
+              <li>No entries yet</li>
+          {% endfor %}
+
+
+       </table>
+        {% if is_paginated %}
+          <ul class="pagination">
+          {% if page_obj.has_previous %}
+            <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+          {% else %}
+            <li class="disabled"><span>&laquo;</span></li>
+          {% endif %}
+          {% for i in paginator.page_range %}
+            {% if page_obj.number == i %}
+              <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+            {% else %}
+              <li><a href="?page={{ i }}">{{ i }}</a></li>
+            {% endif %}
+          {% endfor %}
+          {% if page_obj.has_next %}
+            <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+          {% else %}
+            <li class="disabled"><span>&raquo;</span></li>
+          {% endif %}
+        </ul>
+        {% endif %}
+      </div>
+    </div>
+
+{% endblock content %}

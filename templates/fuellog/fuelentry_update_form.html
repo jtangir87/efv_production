@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'fuellog:entry_list' %}">Fuel Log</a></li>
+<li class="active">Complete</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+Complete Fuel Entry
+{% endblock header %}
+
+{% block content %}
+
+    <div class='row'>
+      <div class="col-lg-12">
+        <div class="col-md-6">
+          <div class="panel panel-primary">
+            <div class="panel-heading">{{fuelentry.vehicle.name}} - {{fuelentry.date| date:"M d, Y"}} </div>
+            <div class="panel-body">
+            {% load bootstrap4 %}
+            {% bootstrap_javascript jquery='full' %}
+            {{ form.media }}          
+                <form method="post">
+                  <h5><strong>Before Fill :</strong> 
+                    {% if fuelentry.current == "EMPTY" %}
+                    <img src="{% static 'img/empty.png' %}" class="fuelicon" alt="">
+                    {% elif fuelentry.current == "1/8" %}
+                    <img src="{% static 'img/eighth.png' %}" class="fuelicon" alt="">
+                    {% elif fuelentry.current == "1/4" %}
+                    <img src="{% static 'img/quarter.png' %}" class="fuelicon" alt="">
+                    {% elif fuelentry.current == "1/2" %}
+                    <img src="{% static 'img/half.png' %}" class="fuelicon" alt="">
+                    {% elif fuelentry.current == "3/4" %}
+                    <img src="{% static 'img/3q.png' %}" class="fuelicon" alt="">
+                    {% elif fuelentry.current == "FULL" %}
+                    <img src="{% static 'img/full.png' %}" class="fuelicon" alt="">      
+                    {% else %}
+                    {{fuelentry.current}}
+                    {% endif %}
+                  </h5>
+                  {% csrf_token %}
+                  {% bootstrap_form form %}
+                  {% bootstrap_button "Save" button_type="submit" button_class="btn-primary"%}
+                </form>	  
+            </div>
+          </div>  
+        </div>  
+      </div>      
+    </div><!--/.row--> 
+
+
+{% endblock content %}

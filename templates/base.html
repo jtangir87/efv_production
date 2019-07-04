@@ -1,0 +1,233 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/style.css'%}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css'%}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css.map'%}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css'%}">
+    <link rel="stylesheet" href="{% static 'css/styles.css'%}">
+    <script src="https://kit.fontawesome.com/c47990e7cb.js"></script>
+
+    <link rel="stylesheet" type="text/css" media="screen" href="http://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.css" /> 
+	  <!--Custom Font-->
+	  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+    <title>Easy Fleet View</title>
+  </head>
+  <body>
+	<nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#sidebar-collapse"><span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span></button>
+				<a class="navbar-brand" href="{% url 'dashboard' %}"><span>Easy</span>FleetView</a>
+        {% if user.is_authenticated %}
+				{% comment %} <ul class="nav navbar-top-links navbar-right">
+					<li class="dropdown"><a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+						<em class="far fa-user"></em><span class="label label-info"></span>
+					</a>
+						<ul class="dropdown-menu">
+							<li><a href="{% url 'accounts:user_detail' pk=request.user.pk %}">
+								<div><em class="far fa-id-card"></em> Profile
+								</div>
+							</a></li>
+							<li class="divider"></li>
+							<li><a href="{% url 'accounts:password_change' %}">
+								<div><em class="fas fa-key"></em> Change Password
+								</div>
+							</a></li>
+							<li class="divider"></li>
+							<li><a href="{% url 'accounts:logout' %}">
+								<div><em class="fa fa-power-off"></em> Log Out
+								</div>
+							</a></li>
+						</ul>
+					</li>
+				</ul> {% endcomment %}
+			</div>
+		</div><!-- /.container-fluid -->
+	</nav>
+		<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+			<div class="profile-sidebar">
+				<div class="profile-usertitle">
+					<div class="profile-usertitle-name">{{user.get_full_name}}</div>
+					<div class="profile-usertitle-status"><span class="indicator label-success"></span>Online</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+			<div class="divider"></div>
+			<form role="search">
+				<div class="form-group">
+					<input type="text" class="form-control" placeholder="Search">
+				</div>
+			</form>
+			<ul class="nav menu">
+        {% if '/' == request.path %}
+				<li class="active"><a href="{% url 'dashboard' %}"><em class="fa fa-dashboard">&nbsp;</em> Dashboard</a></li>
+        {% else %}
+        <li><a href="{% url 'dashboard' %}"><em class="fa fa-dashboard">&nbsp;</em> Dashboard</a></li>
+        {% endif %}
+        {% if 'vehicles' in request.path and 'damage' not in request.path %}
+        <li class="active"><a href="{% url 'vehicles:vehicle_list' %}"><em class="fa fa-truck">&nbsp;</em> Vehicles</a></li>
+        {% else %}
+        <li><a href="{% url 'vehicles:vehicle_list' %}"><em class="fa fa-truck">&nbsp;</em> Vehicles</a></li>
+        {% endif %}
+        {% if 'fuel' in request.path %}
+        <li class="active"><a href="{% url 'fuellog:entry_list' %}"><em class="fa fa-gas-pump">&nbsp;</em> Fuel Log</a></li>
+        {% else %}
+        <li><a href="{% url 'fuellog:entry_list' %}"><em class="fa fa-gas-pump">&nbsp;</em> Fuel Log</a></li>
+        {% endif %}
+				{% if 'service' in request.path %}
+				<li class="active"><a href="{% url 'service:service_list' %}"><em class="fa fa-wrench">&nbsp;</em> Service</a></li>
+        {% else %}
+        <li><a href="{% url 'service:service_list' %}"><em class="fa fa-wrench">&nbsp;</em> Service</a></li>
+        {% endif %}
+        {% if 'damage' in request.path %}
+        <li class='active'><a href="{% url 'vehicles:damage_list' %}"><em class="fa fa-car-crash">&nbsp;</em> Damage Reports</a></li>
+        {% else %}
+				<li><a href="{% url 'vehicles:damage_list' %}"><em class="fa fa-car-crash">&nbsp;</em> Damage Reports</a></li>
+        {% endif %}
+        {% if request.user.is_staff == True %}
+        {% if 'accounts' in request.path and 'password' not in request.path and 'profile' not in request.path %}
+        <li class='active'><a href="{% url 'accounts:user_list' %}"><em class="fa fa-users-cog">&nbsp;</em> Users</a></li>
+        {% else %}
+        <li><a href="{% url 'accounts:user_list' %}"><em class="fa fa-users-cog">&nbsp;</em> Users</a></li>
+        {% endif %}
+        {% endif %}
+        {% if 'profile' in request.path or 'password' in request.path and 'users' not in request.path %}
+        <li class="parent active"><a data-toggle="collapse" href="#sub-item-1">
+        <em class="far fa-user">&nbsp;</em> Profile <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"></span>
+					</a>
+        	<ul class="children collapse" id="sub-item-1">
+						<li><a class="" href="{% url 'accounts:user_detail' pk=request.user.pk %}">
+							<span class="far fa-id-card">&nbsp;</span> Update Profile
+						</a></li>
+						<li><a class="" href="{% url 'accounts:password_change' %}">
+							<span class="fas fa-key">&nbsp;</span> Change Password
+						</a></li>
+					</ul>
+				</li>
+        {% else %}
+         <li class="parent"><a data-toggle="collapse" href="#sub-item-1">
+        <em class="far fa-user">&nbsp;</em> Profile <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"></span>
+					</a>
+        	<ul class="children collapse" id="sub-item-1">
+						<li><a class="" href="{% url 'accounts:user_detail' pk=request.user.pk %}">
+							<span class="far fa-id-card">&nbsp;</span> Update Profile
+						</a></li>
+						<li><a class="" href="{% url 'accounts:password_change' %}">
+							<span class="fas fa-key">&nbsp;</span> Change Password
+						</a></li>
+					</ul>
+				</li>       
+        {% endif %}
+
+				<li><a href="{% url 'accounts:logout' %}"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>
+			</ul>
+		</div><!--/.sidebar-->
+{% comment %} 
+
+    <div class="" style='margin-bottom:25px;'>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+          <div class="container">
+            <a class="navbar-brand" href="{% url 'dashboard' %}"><img src="{% static 'img/fleet-icon-2.png'%}" class="logo" alt="" ></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+              <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="{% url 'dashboard' %}">Home <span class="sr-only">(current)</span></a>
+                {% if user.is_authenticated %}
+      
+                <a class="nav-item nav-link" href="{% url 'vehicles:vehicle_list' %}">Vehicles</a>
+                <a class="nav-item nav-link" href="{% url 'fuellog:entry_list' %}">Fuel Log</a>
+                <a class="nav-item nav-link" href="{% url 'service:service_list' %}">Service</a>
+                <a class="nav-item nav-link" href="{% url 'vehicles:damage_list' %}">Damage Report</a>
+                {% if request.user.is_staff == True %}
+                <a class="nav-item nav-link" href="{% url 'accounts:user_list' %}">Users</a>
+                {% endif %}
+                <a class="nav-item nav-link" href="{% url 'accounts:password_change' %}">Change Password</a>
+                <a class="nav-item nav-link" href="{% url 'accounts:logout' %}">Logout</a>
+                {% else %}
+                <a class="nav-item nav-link" href="{% url 'accounts:login' %}">Login</a>
+                <a class="nav-item nav-link" href="{% url 'accounts:signup' %}">Sign Up</a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </nav>
+    </div> {% endcomment %}
+    {%endif%}
+    <div class="col-sm-12 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+  		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="{% url 'dashboard' %}">
+					<em class="fa fa-home"></em>
+				</a></li>
+    {% block breadcrumb %}
+    {% endblock breadcrumb %}
+      </ol>
+		</div><!--/.row-->
+    <div class="row">
+			<div class="col-lg-12">
+      <h1 class="pager-header">
+    {% block header %}{% endblock header %} </h1> </div>
+    </div>
+
+
+    {% block content %}
+    {% endblock content %}
+
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+      <script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+      <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.pack.min.js"></script>
+      <script type="text/javascript">
+          $(function($){
+              var addToAll = false;
+              var gallery = true;
+              var titlePosition = 'inside';
+              $(addToAll ? 'img' : 'img.fancybox').each(function(){
+                  var $this = $(this);
+                  var title = $this.attr('title');
+                  var src = $this.attr('data-big') || $this.attr('src');
+                  var a = $('<a href="#" class="fancybox"></a>').attr('href', src).attr('title', title);
+                  $this.wrap(a);
+              });
+              if (gallery)
+                  $('a.fancybox').attr('rel', 'fancyboxgallery');
+              $('a.fancybox').fancybox({
+                  titlePosition: titlePosition
+              });
+          });
+          $.noConflict();
+    </script>
+    <script src="{% static 'js/jquery-1.11.1.min.js'%}"></script>
+    <script src="{% static 'js/bootstrap.min.js'%}"></script>
+    <script src="{% static 'js/chart.min.js'%}"></script>
+    <script src="{% static 'js/chart-data.js'%}"></script>
+    <script src="{% static 'js/easypiechart.js'%}"></script>
+    <script src="{% static 'js/easypiechart-data.js'%}"></script>
+    <script src="{% static 'js/bootstrap-datepicker.js'%}"></script>
+    <script src="{% static 'js/custom.js'%}"></script>
+    <script>
+          window.onload = function () {
+        var chart1 = document.getElementById("line-chart").getContext("2d");
+        window.myLine = new Chart(chart1).Line(lineChartData, {
+        responsive: true,
+        scaleLineColor: "rgba(0,0,0,.2)",
+        scaleGridLineColor: "rgba(0,0,0,.05)",
+        scaleFontColor: "#c5c7cc"
+        });
+    };
+	</script>
+  </body>
+</html>

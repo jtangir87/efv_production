@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+{% load el_pagination_tags %}
+{% block breadcrumb %}
+<li class="active">Damage Reports</li>
+{% endblock breadcrumb %}
+
+{% block header %}Damage Reports{% endblock header %}
+
+{% block content %}
+
+  <div class="col-md-8">
+    <div class="panel panel-primary">
+      <div class="panel-heading"><a class="btn btn-lg btn-outline-light" href="{% url 'vehicles:new_damage' %}">Report New Damage</a>
+      </div>
+      <div class="panel-body">
+        <table class="table">
+        <tr>
+          <th scope="col">Vehicle</th>
+          <th scope="col">Date</th>
+          <th scope="col">Driver</th>
+        </tr>
+      {% paginate object_list %}  
+      {% for vehicle in object_list  %}
+      <tr>
+        <td scope="row"><a href="{% url 'vehicles:damage_detail' pk=vehicle.pk %}">{{vehicle.vehicle.name}}</a></td>
+        <td>{{vehicle.date}}</td>
+        <td>{{vehicle.driver}}</td>
+      </tr>
+      {% empty %}
+        <li class="list-group-item">No damage reported</li>
+      {% endfor %}
+      {% show_pages %}
+      </table>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% load el_pagination_tags %}
+{% block breadcrumb %}
+<li><a href="{% url 'vehicles:damage_list' %}">Damage Reports</a></li>
+<li class="active">{{vehicle.name}}</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+{{vehicle.name}}
+{% endblock header %}
+
+
+{% block content %}
+
+	<div class="row">
+  <div class="col-md-8">
+    <div class="panel panel-primary">
+      <div class="panel-heading">All Damage Reports
+      </div>
+    <table class='table'>
+          <tr>
+            <th scope="col">Date</th>
+            <th scope="col">Driver</th>
+            <th scope="col">Description</th>
+          </tr>
+          {% for damage in all_damage  %}
+          <tr>
+            <td><a href="{% url 'vehicles:damage_detail' pk=damage.pk %}">{{damage.date}}</a></td>
+            <td>{{damage.driver}}</td>
+            <td>{{damage.description |slice:'30'}}</td>
+          </tr>
+          {% empty %}
+              <li>No entries yet</li>
+          {% endfor %}
+          
+        </table>
+      </div>
+    </div>
+    </div>
+ 
+        </div>
+    </div>
+   </div> 
+
+
+
+
+{% endblock content %}

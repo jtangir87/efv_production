@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'vehicles:damage_list' %}">Damage Reports</a></li>
+<li class="active">Detail</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+<a href="{% url 'vehicles:vehicle_detail' pk=damagereport.vehicle.pk %}">{{damagereport.vehicle}}</a> - {{damagereport.date}}
+{% endblock header %}
+
+{% block content %}
+
+
+	<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Details</div>
+            <div class="panel-body">
+            <h5>Driver : {{damagereport.driver}}</h5>
+            <h5>Description : {{damagereport.description}}</h5>
+            <h5>Photos:</h5>
+            <div class="row gallery">
+              {% for d in damage_images  %}
+                <div class="col-md-6">
+                <img src="{{d.image.url}}" alt="Image Not Found" class='fancybox img-thumbnail' data-big="{{d.image.url}}">
+                </div>
+              {% endfor %}
+              </div>  
+               <a class="btn btn-warning" href="#">Update</a>
+               <a class="btn btn-danger" href="#">Delete</a>
+            
+					</div>
+				</div>
+			</div>
+    </div><!-- /.row -->
+  
+
+
+
+
+{% endblock content %}

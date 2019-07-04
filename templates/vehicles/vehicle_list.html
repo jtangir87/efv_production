@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block breadcrumb %}
+<li class="active">Vehicles</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+Vehicles
+{% endblock header %}
+
+
+{% block content %}
+
+
+  <div class="col-md-12">
+    <div class="panel panel-primary">
+      <div class="panel-heading"><a class="btn btn-lg btn-outline-light" href="{% url 'vehicles:create_vehicle' %}">Add New Vehicle</a>
+      </div>
+      <div class="panel-body">
+        <table class='table'>
+          <tr>
+            <th scope='col'>Vehicle</th>
+            <th scope='col'>Year</th>
+            <th scope='col'>Make</th> 
+            <th scope='col'>Model</th>
+            <th scope='col'>Mileage</th>
+          </tr>
+          {% for vehicle in object_list  %}
+          <tr>
+            <td scpope='row'><a href="{% url 'vehicles:vehicle_detail' pk=vehicle.pk %}">{{vehicle.name}}</a></td>
+            <td>{{vehicle.year}}</td>
+            <td>{{vehicle.make}}</td>
+            <td>{{vehicle.model}}</td>
+            <td>{{vehicle.current_mileage|intcomma}}</td>
+          </tr>
+          {% empty %}
+          <li class="list-group-item">No vehicles yet</li>
+          {% endfor %}
+
+        </table>
+      </div>
+    </div>
+
+
+{% endblock content %}
+

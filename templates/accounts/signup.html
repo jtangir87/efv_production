@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{{ form.media }}
+<div class='container'>
+  <div class=col-md-6>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      {% bootstrap_button "Log In" button_type="submit" button_class="btn btn-outline-success"%}
+
+
+    </form>
+  </div>
+</div>
+
+{% endblock content %}

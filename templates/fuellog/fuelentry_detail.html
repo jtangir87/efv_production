@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'fuellog:entry_list' %}">Fuel Log</a></li>
+<li class="active">Entry</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+Fuel Entry Details
+{% endblock header %}
+
+{% block content %}
+	<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Details</div>
+          <div class="panel-body">
+            <h3><a href="{% url 'vehicles:vehicle_detail' pk=fuelentry.vehicle.pk %}">{{fuelentry.vehicle.name}}</a></h3>
+            <h5>Date : {{fuelentry.date}}</h5>
+            <h5>Current Fuel : 
+                {% if fuelentry.current == "EMPTY" %}
+                <img src="{% static 'img/empty.png' %}" class="fuelicon" alt="">
+                {% elif fuelentry.current == "1/8" %}
+                <img src="{% static 'img/eighth.png' %}" class="fuelicon" alt="">
+                {% elif fuelentry.current == "1/4" %}
+                <img src="{% static 'img/quarter.png' %}" class="fuelicon" alt="">
+                {% elif fuelentry.current == "1/2" %}
+                <img src="{% static 'img/half.png' %}" class="fuelicon" alt="">
+                {% elif fuelentry.current == "3/4" %}
+                <img src="{% static 'img/3q.png' %}" class="fuelicon" alt="">
+                {% elif fuelentry.current == "FULL" %}
+                <img src="{% static 'img/full.png' %}" class="fuelicon" alt="">      
+                {% else %}
+                {{fuelentry.current}}
+                {% endif %}
+            </h5>
+            <h5>After Fill : 
+                {% if fuelentry.after == "EMPTY" %}
+                <img src="{% static 'img/empty.png' %}" class="fuelicon" alt="">
+                {% elif fuelentry.after == "1/8" %}
+                <img src="{% static 'img/eighth.png' %}" class="fuelicon" alt="">
+                {% elif fuelentry.after == "1/4" %}
+                <img src="{% static 'img/quarter.png' %}" class="fuelicon" alt="">
+                {% elif fuelentry.after == "1/2" %}
+                <img src="{% static 'img/half.png' %}" class="fuelicon" alt="">
+                {% elif fuelentry.after == "3/4" %}
+                <img src="{% static 'img/3q.png' %}" class="fuelicon" alt="">
+                {% elif fuelentry.after == "FULL" %}
+                <img src="{% static 'img/full.png' %}" class="fuelicon" alt="">      
+                {% else %}
+                {{fuelentry.after}}
+                {% endif %}    
+            </h5>
+            <h5>Gallons Purchased : {{fuelentry.gallons}}</h5>
+            <h5>Total Cost : ${{fuelentry.cost}}</h5>
+            <h5>Current Vehicle Mileage : {{fuelentry.mileage | intcomma }}</h5>
+            <h5>Logged by: {{fuelentry.user.first_name}} {{fuelentry.user.last_name}}</h5>
+            {% if not fuelentry.after %}
+              <a class="btn btn-md btn-success" href="{% url 'fuellog:update_entry' pk=fuelentry.pk %}">Complete</a>
+            {% endif %}
+					</div>
+				</div>
+			</div>
+    </div><!-- /.row -->
+
+
+
+{% endblock content %}

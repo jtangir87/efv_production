@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'vehicles:vehicle_list' %}">Vehicles</a></li>
+<li class="active">{{vehicle.name}}</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+{{vehicle.name}}
+{% endblock header %}
+
+{% block content %}
+
+	<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Info</div>
+          <div class="panel-body">
+          <h5>Make : {{vehicle.make}}</h5>
+          <h5>Model : {{vehicle.model}}</h5>
+          <h5>Year : {{vehicle.year}}</h5>
+          <h5>GVW : {{vehicle.gvw}}</h5>
+          <h5>VIN : {{vehicle.vin}}</h5>
+          <h5>License Plate : {{vehicle.license_plate}}</h5>
+          <h5>Purchase Date : {{vehicle.purchase_date}}</h5>
+          <h5>Current Mileage : {{vehicle.current_mileage | intcomma}}</h5>
+
+          <a class="btn btn-warning" href="{% url 'vehicles:update_vehicle' pk=vehicle.pk %}">Update</a>
+          <a class="btn btn-danger" href="{% url 'vehicles:delete_vehicle' pk=vehicle.pk %}">Delete</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+				  <div class="panel-heading">Expenses</div>
+          <div class="panel-body">
+            <h5>YTD Fuel : ${{ytd_fuel_total|default_if_none:""}}</h5>
+            <h5>YTD Service Expenses : ${{ytd_serv_total|default_if_none:""}}</h5>
+            <h5>Lifetime Service Expenses : ${{lifetime_serv_total|default_if_none:""}}</h5> 
+					</div>
+				</div>
+			</div>
+		</div><!-- /.row -->
+
+	<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Upcoming Service</div>
+          <div class="panel-body">
+          <table class="table">
+            <tr>
+              <th scope="col">Required Service</th>
+              <th scope="col">Due Date</th>
+              <th scope="col">Due Mileage</th>
+            </tr>
+            {% for service in service_records %}
+            {% if service.is_scheduled %}
+            <tr>
+              <td scope="row"><a href="{% url 'service:record_detail' pk=service.pk %}">{{service.description|slice:'20'}}</a></td>
+              {% if service != Null and service.is_past_due %}
+              <td class='past_due'>{{service.date|default_if_none:""}}</td>
+              {%else%}
+              <td>{{service.date|default_if_none:""}}</td>
+              {%endif%}
+              {% if service != Null and service.is_past_mileage %}
+              <td class='past_due'>{{service.mileage|default_if_none:""  | intcomma  }}</td>
+              {%else%}
+              <td>{{service.mileage|default_if_none:""  | intcomma  }}</td>
+              {%endif%}
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </table>
+					</div>
+				</div>
+			</div>
+      <div class="col-md-6">
+            <div class="panel panel-primary">
+              <div class="panel-heading">Service Records
+                <span class="pull-right"><a class="btn btn-sm btn-primary" href="{% url 'service:vehicle_all' pk=vehicle.pk %}">View All</a></span>
+              </div>
+              <div class="panel-body">
+                <table class="table">
+                    <tr>
+                      <th scope="col">Date</th>
+                      <th scope="col">Servicer</th>
+                      <th scope="col">Cost</th>
+                      <th scope="col">Description</th>
+                    </tr>
+                    {% for service in service_records|slice:'5' %}
+                    {% if service.is_completed %}
+                    <tr>
+                      <td scope="row"><a href="{% url 'service:record_detail' pk=service.pk %}">{{service.date}}</a></td>
+                      <td>{{service.servicer}}</td>
+                      <td>${{service.cost | intcomma }}</td>
+                      <td>{{service.description|slice:'30'}}</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                  </table>
+              </div>
+            </div>
+          </div>
+    </div><!-- /.row -->
+
+	<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Recent Fuel Logs
+          <span class="pull-right"><a class="btn btn-sm btn-primary" href="{% url 'fuellog:vehicle_all' pk=vehicle.pk %}">View All</a></span>
+          </div>
+          <div class="panel-body">
+            <table class="table">
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Before Fill</th>
+                  <th scope="col">After Fill</th>
+                  <th scope="col">Logged by</th>
+                </tr>
+                {% for fuel in fuel_entries|slice:":5" %}
+                <tr>
+                  <td scope="row"><a href="{% url 'fuellog:entry_detail' pk=fuel.pk %}">{{fuel.date | date:"M d, Y"}}</a></td>
+                  <td>
+                    {% if fuel.current == "EMPTY" %}
+                    <img src="{% static 'img/empty.png' %}" class="fuelicon" alt="">
+                    {% elif fuel.current == "1/8" %}
+                    <img src="{% static 'img/eighth.png' %}" class="fuelicon" alt="">
+                    {% elif fuel.current == "1/4" %}
+                    <img src="{% static 'img/quarter.png' %}" class="fuelicon" alt="">
+                    {% elif fuel.current == "1/2" %}
+                    <img src="{% static 'img/half.png' %}" class="fuelicon" alt="">
+                    {% elif fuel.current == "3/4" %}
+                    <img src="{% static 'img/3q.png' %}" class="fuelicon" alt="">
+                    {% elif fuel.current == "FULL" %}
+                    <img src="{% static 'img/full.png' %}" class="fuelicon" alt="">      
+                    {% else %}
+                    {{fuel.current}}
+                    {% endif %}
+                    </td>
+                    <td>
+                    {% if fuel.after == "EMPTY" %}
+                    <img src="{% static 'img/empty.png' %}" class="fuelicon" alt="">
+                    {% elif fuel.after == "1/8" %}
+                    <img src="{% static 'img/eighth.png' %}" class="fuelicon" alt="">
+                    {% elif fuel.after == "1/4" %}
+                    <img src="{% static 'img/quarter.png' %}" class="fuelicon" alt="">
+                    {% elif fuel.after == "1/2" %}
+                    <img src="{% static 'img/half.png' %}" class="fuelicon" alt="">
+                    {% elif fuel.after == "3/4" %}
+                    <img src="{% static 'img/3q.png' %}" class="fuelicon" alt="">
+                    {% elif fuel.after == "FULL" %}
+                    <img src="{% static 'img/full.png' %}" class="fuelicon" alt="">      
+                    {% else %}
+                    {{fuel.after}}
+                    {% endif %}
+                  
+                  
+                  </td>
+                  <td>{{fuel.user.username}}</td>
+                </tr>
+
+                {% endfor %}
+              </table>
+					</div>
+				</div>
+			</div>
+      <div class="col-md-6">
+            <div class="panel panel-primary">
+              <div class="panel-heading">Reported Damages
+              <span class="pull-right"><a class="btn btn-sm btn-primary" href="{% url 'vehicles:vehicle_all_damage' pk=vehicle.pk %}">View All</a></span>
+              </div>
+              <div class="panel-body">
+                <table class="table">
+                  <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Driver</th>
+                    <th scope="col">Logged by</th>
+                  </tr>
+                  {% for damage in damage_reports|slice:":5" %}
+                  <tr>
+                    <td scope="row"><a href="{% url 'vehicles:damage_detail' pk=damage.pk %}">{{damage.date}}</a></td>
+                    <td>{{damage.driver}}</td>
+                    <td>{{damage.user.username}}</td>
+                  </tr>
+
+                  {% endfor %}
+                </table>
+              </div>
+            </div>
+          </div>
+    </div><!-- /.row -->
+
+
+{% endblock content %}

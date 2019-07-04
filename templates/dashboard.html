@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% load template_filters %}
+
+{% block breadcrumb %}
+<li class="active">Dashboard</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+Dashboard
+{% endblock header %}
+
+{% block content %}				
+
+		{% if user.is_authenticated %}
+		<div class="panel panel-container">
+			<div class="row">
+				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+					<div class="panel panel-teal panel-widget border-right">
+						<div class="row no-padding"><em class="fas fa-xl fa-truck color-blue"></em>
+							<div class="large">{{vehicle_count}}</div>
+							<div class="text-muted">Vehicles</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+					<div class="panel panel-blue panel-widget border-right">
+						<div class="row no-padding"><em class="fas fa-xl fa-gas-pump color-orange"></em>
+							<div class="large">${{ytd_fuel_total|intcomma}}</div>
+							<div class="text-muted">YTD Fuel</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+					<div class="panel panel-orange panel-widget border-right">
+						<div class="row no-padding"><em class="fas fa-xl fa-wrench color-teal"></em>
+							<div class="large">${{ytd_serv_total | intcomma}}</div>
+							<div class="text-muted">YTD Service</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+					<div class="panel panel-red panel-widget ">
+						<div class="row no-padding"><em class="fa fa-xl fa-tools color-red"></em>
+							<div class="large">${{lifetime_serv_total | intcomma}}</div>
+							<div class="text-muted">Lifetime Service</div>
+						</div>
+					</div>
+				</div>
+			</div><!--/.row-->
+		</div>
+		{% comment %} <div class="row">
+			<div class="col-md-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Site Traffic Overview
+						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span></div>
+					<div class="panel-body">
+						<div class="canvas-wrapper">
+							<canvas class="main-chart" id="line-chart" height="200" width="600"></canvas>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!--/.row--> {% endcomment %}
+		
+		{% comment %} <div class="row">
+			<div class="col-xs-6 col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-body easypiechart-panel">
+						<h4>New Orders</h4>
+						<div class="easypiechart" id="easypiechart-blue" data-percent="92" ><span class="percent">92%</span></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-6 col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-body easypiechart-panel">
+						<h4>Comments</h4>
+						<div class="easypiechart" id="easypiechart-orange" data-percent="65" ><span class="percent">65%</span></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-6 col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-body easypiechart-panel">
+						<h4>New Users</h4>
+						<div class="easypiechart" id="easypiechart-teal" data-percent="56" ><span class="percent">56%</span></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-6 col-md-3">
+				<div class="panel panel-default">
+					<div class="panel-body easypiechart-panel">
+						<h4>Visitors</h4>
+						<div class="easypiechart" id="easypiechart-red" data-percent="27" ><span class="percent">27%</span></div>
+					</div>
+				</div>
+			</div>
+		</div><!--/.row--> {% endcomment %}
+		
+		<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						Recent Fuel 
+							<span class="pull-right"><a class="btn btn-sm btn-primary" href="{% url 'fuellog:create_entry' %}">Add Fuel</a></span></div>
+			<div class="panel-body timeline-container">
+            <table class="table">
+            <tr>
+              <th scope="col">Vehicle</th>
+              <th scope="col">As of:</th>
+              <th scope="col">Current Fuel</th>
+              <th scope="col">Current Mileage</th>
+            </tr>
+            {% for fuel in recent_fuel   %}
+            <tr>
+              <td scope="row"><a href="{% url 'fuellog:entry_detail' pk=fuel.pk %}">{{fuel.vehicle}}</a></td>
+              <td>{{fuel.date | date:"m/d/y"}}</td>
+              <td>
+                {% if fuel.after %}
+                  {% if fuel.after == "EMPTY" %}
+                  <img src="{% static 'img/empty.png' %}" class="fuelicon" alt="">
+                  {% elif fuel.after == "1/8" %}
+                  <img src="{% static 'img/eighth.png' %}" class="fuelicon" alt="">
+                  {% elif fuel.after == "1/4" %}
+                  <img src="{% static 'img/quarter.png' %}" class="fuelicon" alt="">
+                  {% elif fuel.after == "1/2" %}
+                  <img src="{% static 'img/half.png' %}" class="fuelicon" alt="">
+                  {% elif fuel.after == "3/4" %}
+                  <img src="{% static 'img/3q.png' %}" class="fuelicon" alt="">
+                  {% elif fuel.after == "FULL" %}
+                  <img src="{% static 'img/full.png' %}" class="fuelicon" alt="">      
+                  {% else %}
+                  {{fuel.after}}
+                  {% endif %} 
+                  
+                {% else %}
+                    {% if fuel.current == "EMPTY" %}
+                    <img src="{% static 'img/empty.png' %}" class="fuelicon" alt="">
+                    {% elif fuel.current == "1/8" %}
+                    <img src="{% static 'img/eighth.png' %}" class="fuelicon" alt="">
+                    {% elif fuel.current == "1/4" %}
+                    <img src="{% static 'img/quarter.png' %}" class="fuelicon" alt="">
+                    {% elif fuel.current == "1/2" %}
+                    <img src="{% static 'img/half.png' %}" class="fuelicon" alt="">
+                    {% elif fuel.current == "3/4" %}
+                    <img src="{% static 'img/3q.png' %}" class="fuelicon" alt="">
+                    {% elif fuel.current == "FULL" %}
+                    <img src="{% static 'img/full.png' %}" class="fuelicon" alt="">      
+                    {% else %}
+                    {{fuel.current}}
+                   {% endif %}
+
+                {% endif %}
+                </td>
+                <td>{{fuel.vehicle.current_mileage|intcomma}}</td>
+                             
+            </tr>
+            {% endfor %}   
+           </table>
+			  	</div>
+			  </div>
+        <div class="panel panel-default">
+					<div class="panel-heading">
+						Recent Damage
+						<span class="pull-right"><a class="btn btn-sm btn-primary" href="{% url 'vehicles:new_damage' %}">New Damage</a></span></div>
+					<div class="panel-body">
+            <table class="table">
+            <tr>
+              <th scope="col">Vehicle</th>
+              <th scope="col">Date</th>
+              <th scope="col">Driver</th>
+            </tr>
+            {% for damage in recent_damage %}
+            <tr>
+              <td scope="row"><a href="{% url 'vehicles:damage_detail' pk=damage.pk %}">{{damage.vehicle}}</a></td>
+              <td>{{damage.date | date:"M d, Y"}}</td>
+              <td>{{damage.driver}}</td>
+            </tr>
+            {% endfor %} 
+          </table>
+					</div>
+				</div>
+				{% comment %} <div class="panel panel-default">
+					<div class="panel-heading">
+						To-do List
+						<ul class="pull-right panel-settings panel-button-tab-right">
+							<li class="dropdown"><a class="pull-right dropdown-toggle" data-toggle="dropdown" href="#">
+								<em class="fa fa-cogs"></em>
+							</a>
+								<ul class="dropdown-menu dropdown-menu-right">
+									<li>
+										<ul class="dropdown-settings">
+											<li><a href="#">
+												<em class="fa fa-cog"></em> Settings 1
+											</a></li>
+											<li class="divider"></li>
+											<li><a href="#">
+												<em class="fa fa-cog"></em> Settings 2
+											</a></li>
+											<li class="divider"></li>
+											<li><a href="#">
+												<em class="fa fa-cog"></em> Settings 3
+											</a></li>
+										</ul>
+									</li>
+								</ul>
+							</li>
+						</ul>
+						<span class="pull-right clickable panel-toggle panel-button-tab-left"><em class="fa fa-toggle-up"></em></span></div>
+					<div class="panel-body">
+						<ul class="todo-list">
+							<li class="todo-list-item">
+								<div class="checkbox">
+									<input type="checkbox" id="checkbox-1" />
+									<label for="checkbox-1">Make coffee</label>
+								</div>
+								<div class="pull-right action-buttons"><a href="#" class="trash">
+									<em class="fa fa-trash"></em>
+								</a></div>
+							</li>
+							<li class="todo-list-item">
+								<div class="checkbox">
+									<input type="checkbox" id="checkbox-2" />
+									<label for="checkbox-2">Check emails</label>
+								</div>
+								<div class="pull-right action-buttons"><a href="#" class="trash">
+									<em class="fa fa-trash"></em>
+								</a></div>
+							</li>
+							<li class="todo-list-item">
+								<div class="checkbox">
+									<input type="checkbox" id="checkbox-3" />
+									<label for="checkbox-3">Reply to Jane</label>
+								</div>
+								<div class="pull-right action-buttons"><a href="#" class="trash">
+									<em class="fa fa-trash"></em>
+								</a></div>
+							</li>
+							<li class="todo-list-item">
+								<div class="checkbox">
+									<input type="checkbox" id="checkbox-4" />
+									<label for="checkbox-4">Make more coffee</label>
+								</div>
+								<div class="pull-right action-buttons"><a href="#" class="trash">
+									<em class="fa fa-trash"></em>
+								</a></div>
+							</li>
+							<li class="todo-list-item">
+								<div class="checkbox">
+									<input type="checkbox" id="checkbox-5" />
+									<label for="checkbox-5">Work on the new design</label>
+								</div>
+								<div class="pull-right action-buttons"><a href="#" class="trash">
+									<em class="fa fa-trash"></em>
+								</a></div>
+							</li>
+							<li class="todo-list-item">
+								<div class="checkbox">
+									<input type="checkbox" id="checkbox-6" />
+									<label for="checkbox-6">Get feedback on design</label>
+								</div>
+								<div class="pull-right action-buttons"><a href="#" class="trash">
+									<em class="fa fa-trash"></em>
+								</a></div>
+							</li>
+						</ul>
+					</div>
+					<div class="panel-footer">
+						<div class="input-group">
+							<input id="btn-input" type="text" class="form-control input-md" placeholder="Add new task" /><span class="input-group-btn">
+								<button class="btn btn-primary btn-md" id="btn-todo">Add</button>
+						</span></div>
+					</div>
+				</div> {% endcomment %}
+			</div><!--/.col-->
+			
+			
+			<div class="col-md-6">
+				<div class="panel panel-default ">
+					<div class="panel-heading">
+						Upcoming Service <span class="pull-right"><a class="btn btn-sm btn-primary" href="{% url 'service:create_scheduled' %}">Schedule New</a></span></div>
+					<div class="panel-body timeline-container">
+            <table class="table">
+              <tr>
+                <th scope="col">Vehicle</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Due Mileage</th>
+                <th scope="col">Service</th>
+              </tr>
+              {% for upcoming in upcoming_service %}
+              <tr>
+                <td scope="row"><a href="{% url 'service:record_detail' pk=upcoming.pk %}">{{upcoming.vehicle}}</a></td>
+                {% if upcoming.date != Null and upcoming.is_past_due %}
+                <td class='past_due'>
+                {{upcoming.date |default_if_none:""}}</td>
+                {% else %}
+                <td>{{upcoming.date|default_if_none:""}}</td>
+                {% endif %}
+                {% if upcoming.mileage != Null and upcoming.is_past_mileage %}
+                <td class='past_due'>
+                {{upcoming.mileage |default_if_none:"" | intcomma}}</td>
+                {% else %}
+                <td>{{upcoming.mileage |default_if_none:"" | intcomma}}</td>
+                {% endif %}
+                <td>{{upcoming.description|slice:'20'}}</td>
+              </tr>
+            {% endfor %}     
+            </table>
+					</div>
+				</div>
+			</div><!--/.col-->
+      <div class="col-md-6">
+				<div class="panel panel-default ">
+					<div class="panel-heading">
+						Recent Service
+						<span class="pull-right"><a class="btn btn-sm btn-primary" href="{% url 'service:create_record' %}">Add Record</a></span></div>
+					<div class="panel-body timeline-container">
+            <table class="table">
+              <tr>
+                <th scope="col">Vehicle</th>
+                <th scope="col">Date</th>
+                <th scope="col">Mileage</th>
+                <th scope="col">Service</th>
+              </tr>
+              {% for recent in recent_service %}
+              <tr>
+                <td scope="row"><a href="{% url 'service:record_detail' pk=recent.pk %}">{{recent.vehicle}}</a></td>
+                <td>{{recent.date|default_if_none:""}}</td>
+                <td>{{recent.mileage |default_if_none:"" | intcomma}}</td>
+                <td>{{recent.description|slice:'20'}}</td>
+              </tr>
+            {% endfor %}     
+          </table>
+			
+					</div>
+				</div>
+			</div><!--/.col-->
+			<div class="col-sm-12">
+				<p class="back-link">Lumino Theme by <a href="https://www.medialoot.com">Medialoot</a></p>
+			</div>
+		</div><!--/.row-->
+	</div>	<!--/.main-->
+  {%else%}
+  <h3>Please log in to see your dashboard</h3>
+  <a href="{% url 'accounts:login' %}"><button type="button" class="btn btn-lg btn-primary">Log In</button></a>
+  {%endif%}
+
+{% endblock content %}
