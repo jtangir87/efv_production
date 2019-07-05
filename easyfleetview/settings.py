@@ -108,7 +108,7 @@ DATABASES = {
         'ENGINE': 'django_tenants.postgresql_backend',
         'NAME': 'easyfleetview',
         'USER' : 'postgres',
-        'PASSWORD' : 'Jst18506',
+        'PASSWORD' : '12345678',
     }
 }
 
