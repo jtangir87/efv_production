@@ -172,12 +172,7 @@ MEDIA_URL = '/media/'
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent-emails')
 
-INVITATIONS_SIGNUP_REDIRECT = 'accounts:signup'
 
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-)
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
