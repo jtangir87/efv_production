@@ -1,3 +1,4 @@
+import os
 from django.db import models
 from django.urls import reverse
 import datetime
@@ -48,10 +49,13 @@ class DamageReport(models.Model):
     def get_absolute_url(self):
         return reverse('vehicles:damage_detail', kwargs={'pk': self.pk})
 
+def update_filename(instance, filename):
+    path_you_want_to_upload_to = "photos"
+    return os.path.join(path_you_want_to_upload_to, filename.lower())
 
 class DamageImages(models.Model):
     report = models.ForeignKey(DamageReport, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to="photos/%Y/%m/%d", blank=True, null=True)
+    image = models.ImageField(upload_to=update_filename, blank=True, null=True)
 
     def __str__(self):
         return self.report.vehicle.name
