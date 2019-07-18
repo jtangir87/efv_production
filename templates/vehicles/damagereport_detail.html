@@ -8,7 +8,7 @@
 {% endblock breadcrumb %}
 
 {% block header %}
-<a href="{% url 'vehicles:vehicle_detail' pk=damagereport.vehicle.pk %}">{{damagereport.vehicle}}</a> - {{damagereport.date}}
+<a href="{% url 'vehicles:vehicle_detail' pk=damagereport.vehicle.pk %}">{{damagereport.vehicle.name}}</a> - {{damagereport.date}}
 {% endblock header %}
 
 {% block content %}

@@ -7,3 +7,8 @@ def phone_number(number):
     second = number[3:6]
     third = number[6:10]
     return '(' + first + ')' + '' + second + '-' + third
+
+@register.filter(name='order_by')
+def order_by(queryset, args):
+    args = [x.strip() for x in args.split(',')]
+    return queryset.order_by(*args)

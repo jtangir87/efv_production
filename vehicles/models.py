@@ -21,7 +21,7 @@ class Vehicle(models.Model):
         ordering = ['name']
 
     def __str__(self):
-        return self.name
+        return self.name + ' - ' + self.vin
 
     def get_absolute_url(self):
         return reverse('vehicles:vehicle_detail', kwargs={'pk': self.pk})

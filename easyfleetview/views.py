@@ -1,3 +1,4 @@
+import operator
 from django.shortcuts import render,redirect
 from django.views.generic import TemplateView, ListView, TemplateView, CreateView
 from fuellog.models import FuelEntry
@@ -18,7 +19,8 @@ class Dashboard(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(Dashboard, self).get_context_data(**kwargs)
-        context['recent_fuel'] = FuelEntry.objects.order_by('vehicle_id', '-date').distinct('vehicle_id')
+        last_fuel = FuelEntry.objects.order_by('vehicle_id', '-date').distinct('vehicle_id')
+        context['recent_fuel'] = FuelEntry.objects.filter(id__in=last_fuel).order_by('vehicle')
         context['upcoming_service'] = ServiceRecord.objects.filter(completed=False).order_by('vehicle')[:5]
         context['recent_service'] = ServiceRecord.objects.filter(completed=True).order_by('-date')[:5]
         context ['recent_damage'] = DamageReport.objects.order_by('-date')[:5]
