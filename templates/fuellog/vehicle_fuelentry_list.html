@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
 {% load humanize %}
-{% load el_pagination_tags %}
 {% block breadcrumb %}
 <li><a href="{% url 'fuellog:entry_list' %}">Fuel Entries</a></li>
 <li class="active">{{vehicle.name}}</li>
