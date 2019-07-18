@@ -22,19 +22,8 @@ class CreateServiceRecord(CreateView):
 
     def form_valid(self,form):
         self.object = form.save(commit=False)
-        self.object.user = self.request.user
-        self.object.date = date.today()
-        vehicle_id = self.object.vehicle.pk
-        mileage = self.object.mileage
-        
-        current_mileage = Vehicle.objects.get(id=vehicle_id).current_mileage
-        if current_mileage > mileage:
-            form.add_error('mileage', 'Incorrect mileage reading! Mileage cannot be lower than previous record')
-            return super().form_invalid(form)        
-
+        self.object.user = self.request.user      
         self.object.save()
-
-        Vehicle.objects.filter(id=vehicle_id).update(current_mileage=mileage)
         return super().form_valid(form)
 
 class UpdateServiceRecord(UpdateView):
