@@ -56,7 +56,7 @@ Fuel Entry Details
             <h5>Gallons Purchased : {{fuelentry.gallons}}</h5>
             <h5>Total Cost : ${{fuelentry.cost}}</h5>
             <h5>Current Vehicle Mileage : {{fuelentry.mileage | intcomma }}</h5>
-            <h5>Logged by: {{fuelentry.user.first_name}} {{fuelentry.user.last_name}}</h5>
+            <h5>Logged by: {{fuelentry.user.get_full_name}}</h5>
             {% if not fuelentry.after %}
               <a class="btn btn-md btn-success" href="{% url 'fuellog:update_entry' pk=fuelentry.pk %}">Complete</a>
             {% endif %}

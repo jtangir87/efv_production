@@ -158,7 +158,7 @@
                   
                   
                   </td>
-                  <td>{{fuel.user.username}}</td>
+                  <td>{{fuel.user.get_full_name}}</td>
                 </tr>
 
                 {% endfor %}
@@ -182,7 +182,7 @@
                   <tr>
                     <td scope="row"><a href="{% url 'vehicles:damage_detail' pk=damage.pk %}">{{damage.date}}</a></td>
                     <td>{{damage.driver}}</td>
-                    <td>{{damage.user.username}}</td>
+                    <td>{{damage.user.get_full_name}}</td>
                   </tr>
 
                   {% endfor %}

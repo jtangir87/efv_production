@@ -22,7 +22,7 @@
             <h5>Cost : ${{servicerecord.cost  | intcomma }}</h5>
             <h5>Mileage : {{servicerecord.mileage |default_if_none:"" | intcomma }}</h5>
             <h5>Description : {{servicerecord.description}}</h5>
-            <h5>Logged by: {{servicerecord.user.first_name}} {{servicerecord.user.last_name}}</h5>
+            <h5>Logged by: {{servicerecord.user.get_full_name}}</h5>
             <a class="btn btn-warning" href="{% url 'service:update_record' pk=servicerecord.pk %}">Update</a>
             {% if servicerecord.completed == False %}
             <a class="btn btn-success" href="{% url 'service:complete_scheduled' pk=servicerecord.pk %}">Complete</a>
