@@ -13,8 +13,12 @@ User = get_user_model()
 # Create your views here.
 class CreateServiceRecord(CreateView):
     model = ServiceRecord
-    fields = ('vehicle', 'servicer', 'invoice', 'cost', 'mileage', 'description')
-
+    fields = ('vehicle','date', 'servicer', 'invoice', 'cost', 'mileage', 'description')
+   
+    def get_form(self):
+        form = super().get_form()
+        form.fields['date'].widget = DateTimePickerInput(format='%m-%d-%Y')
+        return form
 
     def form_valid(self,form):
         self.object = form.save(commit=False)
