@@ -55,7 +55,7 @@ def update_filename(instance, filename):
 
 class DamageImages(models.Model):
     report = models.ForeignKey(DamageReport, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to=update_filename, blank=True, null=True)
+    image = models.ImageField(upload_to=update_filename, blank=True, null=True, help_text='Take photo horizontally')
 
     def __str__(self):
         return self.report.vehicle.name

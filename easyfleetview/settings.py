@@ -61,7 +61,7 @@ TENANT_APPS = [
 
 INSTALLED_APPS = list(set(SHARED_APPS + TENANT_APPS))
 
-SITE_ID=1
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django_tenants.middleware.main.TenantMainMiddleware',
