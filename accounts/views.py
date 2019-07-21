@@ -32,7 +32,7 @@ class UserList(ListView):
     context_object_name = 'users'
 
     def get_queryset(self):
-        user_list = User.objects.all().order_by('last_name')
+        user_list = User.objects.filter(is_superuser=False).order_by('last_name')
         return user_list
 
 class CreateUser(CreateView):
