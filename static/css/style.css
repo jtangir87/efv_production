@@ -20,3 +20,7 @@ a.fancybox:hover img {
     color:red;
     font-weight:bold;
 }
+
+.tab {
+    margin-left: 40px;
+}

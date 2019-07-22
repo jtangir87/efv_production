@@ -18,8 +18,8 @@ Fuel Entry Details
 					<div class="panel-heading">Details</div>
           <div class="panel-body">
             <h3><a href="{% url 'vehicles:vehicle_detail' pk=fuelentry.vehicle.pk %}">{{fuelentry.vehicle.name}}</a></h3>
-            <h5>Date : {{fuelentry.date}}</h5>
-            <h5>Current Fuel : 
+            <h5><strong>Date :</strong> {{fuelentry.date}}</h5>
+            <h5><strong>Current Fuel :</strong> 
                 {% if fuelentry.current == "EMPTY" %}
                 <img src="{% static 'img/empty.png' %}" class="fuelicon" alt="">
                 {% elif fuelentry.current == "1/8" %}
@@ -36,7 +36,7 @@ Fuel Entry Details
                 {{fuelentry.current}}
                 {% endif %}
             </h5>
-            <h5>After Fill : 
+            <h5><strong>After Fill :</strong> 
                 {% if fuelentry.after == "EMPTY" %}
                 <img src="{% static 'img/empty.png' %}" class="fuelicon" alt="">
                 {% elif fuelentry.after == "1/8" %}
@@ -53,10 +53,10 @@ Fuel Entry Details
                 {{fuelentry.after}}
                 {% endif %}    
             </h5>
-            <h5>Gallons Purchased : {{fuelentry.gallons}}</h5>
-            <h5>Total Cost : ${{fuelentry.cost}}</h5>
-            <h5>Current Vehicle Mileage : {{fuelentry.mileage | intcomma }}</h5>
-            <h5>Logged by: {{fuelentry.user.get_full_name}}</h5>
+            <h5><strong>Gallons Purchased :</strong> {{fuelentry.gallons}}</h5>
+            <h5><strong>Total Cost :</strong> ${{fuelentry.cost}}</h5>
+            <h5><strong>Current Vehicle Mileage :</strong> {{fuelentry.mileage | intcomma }}</h5>
+            <h5><strong>Logged by:</strong> {{fuelentry.user.get_full_name}}</h5>
             {% if not fuelentry.after %}
               <a class="btn btn-md btn-success" href="{% url 'fuellog:update_entry' pk=fuelentry.pk %}">Complete</a>
             {% endif %}

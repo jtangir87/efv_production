@@ -8,7 +8,7 @@
 {% endblock breadcrumb %}
 
 {% block header %}
-<a href="{% url 'vehicles:vehicle_detail' pk=servicerecord.vehicle.pk %}">{{servicerecord.vehicle.name }}</a> - {{servicerecord.date|default_if_none:""}}
+Service Record Details
 {% endblock header %}
 
 {% block content %}
@@ -17,12 +17,15 @@
 				<div class="panel panel-primary">
 					<div class="panel-heading">Details</div>
           <div class="panel-body">
-            <h5>Servicer : {{servicerecord.servicer}}</h5>
-            <h5>Invoice # : {{servicerecord.invoice}}</h5>
-            <h5>Cost : ${{servicerecord.cost  | intcomma }}</h5>
-            <h5>Mileage : {{servicerecord.mileage |default_if_none:"" | intcomma }}</h5>
-            <h5>Description : {{servicerecord.description}}</h5>
-            <h5>Logged by: {{servicerecord.user.get_full_name}}</h5>
+            <h3><a href="{% url 'vehicles:vehicle_detail' pk=servicerecord.vehicle.pk %}">{{servicerecord.vehicle.name }}</a></h3>
+            <h5><strong>Date :</strong> {{servicerecord.date|default_if_none:""}}</h5>
+            <h5><strong>Servicer :</strong> {{servicerecord.servicer}}</h5>
+            <h5><strong>Invoice # :</strong> {{servicerecord.invoice}}</h5>
+            <h5><strong>Cost :</strong> ${{servicerecord.cost  | intcomma }}</h5>
+            <h5><strong>Mileage :</strong> {{servicerecord.mileage |default_if_none:"" | intcomma }}</h5>
+            <h5><strong>Description :</strong></h5> 
+            <h5 class='tab'>{{servicerecord.description|linebreaksbr}}</h5>
+            <h5><strong>Logged by:</strong> {{servicerecord.user.get_full_name}}</h5>
             <a class="btn btn-warning" href="{% url 'service:update_record' pk=servicerecord.pk %}">Update</a>
             {% if servicerecord.completed == False %}
             <a class="btn btn-success" href="{% url 'service:complete_scheduled' pk=servicerecord.pk %}">Complete</a>

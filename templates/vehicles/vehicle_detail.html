@@ -18,14 +18,14 @@
 				<div class="panel panel-primary">
 					<div class="panel-heading">Info</div>
           <div class="panel-body">
-          <h5>Make : {{vehicle.make}}</h5>
-          <h5>Model : {{vehicle.model}}</h5>
-          <h5>Year : {{vehicle.year}}</h5>
-          <h5>GVW : {{vehicle.gvw}}</h5>
-          <h5>VIN : {{vehicle.vin}}</h5>
-          <h5>License Plate : {{vehicle.license_plate}}</h5>
-          <h5>Purchase Date : {{vehicle.purchase_date}}</h5>
-          <h5>Current Mileage : {{vehicle.current_mileage | intcomma}}</h5>
+          <h5><strong>Make :</strong> {{vehicle.make}}</h5>
+          <h5><strong>Model :</strong> {{vehicle.model}}</h5>
+          <h5><strong>Year :</strong> {{vehicle.year}}</h5>
+          <h5><strong>GVW :</strong> {{vehicle.gvw}}</h5>
+          <h5><strong>VIN :</strong> {{vehicle.vin}}</h5>
+          <h5><strong>License Plate :</strong> {{vehicle.license_plate}}</h5>
+          <h5><strong>Purchase Date :</strong> {{vehicle.purchase_date}}</h5>
+          <h5><strong>Current Mileage :</strong> {{vehicle.current_mileage | intcomma}}</h5>
 
           <a class="btn btn-warning" href="{% url 'vehicles:update_vehicle' pk=vehicle.pk %}">Update</a>
           <a class="btn btn-danger" href="{% url 'vehicles:delete_vehicle' pk=vehicle.pk %}">Delete</a>
@@ -36,9 +36,9 @@
 				<div class="panel panel-primary">
 				  <div class="panel-heading">Expenses</div>
           <div class="panel-body">
-            <h5>YTD Fuel : ${{ytd_fuel_total|default_if_none:""}}</h5>
-            <h5>YTD Service Expenses : ${{ytd_serv_total|default_if_none:""}}</h5>
-            <h5>Lifetime Service Expenses : ${{lifetime_serv_total|default_if_none:""}}</h5> 
+            <h5><strong>YTD Fuel :</strong> ${{ytd_fuel_total|default_if_none:""}}</h5>
+            <h5><strong>YTD Service Expenses :</strong> ${{ytd_serv_total|default_if_none:""}}</h5>
+            <h5><strong>Lifetime Service Expenses :</strong> ${{lifetime_serv_total|default_if_none:""}}</h5> 
 					</div>
 				</div>
 			</div>
