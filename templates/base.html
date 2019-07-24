@@ -57,14 +57,7 @@
 		</div><!-- /.container-fluid -->
 	</nav>
 		<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
-			<div class="profile-sidebar">
-				<div class="profile-usertitle">
-					<div class="profile-usertitle-name">{{user.get_full_name}}</div>
-					<div class="profile-usertitle-status"><span class="indicator label-success"></span>Online</div>
-				</div>
-				<div class="clear"></div>
-			</div>
-			<div class="divider"></div>
+
 			<ul class="nav menu">
         {% if '/' == request.path %}
 				<li class="active"><a href="{% url 'dashboard' %}"><em class="fa fa-dashboard">&nbsp;</em> Dashboard</a></li>
