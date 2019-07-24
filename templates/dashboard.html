@@ -18,7 +18,7 @@ Dashboard
 			<div class="row">
 				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
 					<div class="panel panel-teal panel-widget border-right">
-						<div class="row no-padding"><em class="fas fa-xl fa-truck color-blue"></em>
+						<div class="row no-padding"><a href="{% url 'vehicles:vehicle_list' %}"><em class="fas fa-xl fa-truck color-blue"></em></a>
 							<div class="large">{{vehicle_count}}</div>
 							<div class="text-muted">Vehicles</div>
 						</div>
@@ -26,7 +26,7 @@ Dashboard
 				</div>
 				<div class="col-xs-6 col-md-3 col-lg-3 no-padding">
 					<div class="panel panel-blue panel-widget border-right">
-						<div class="row no-padding"><em class="fas fa-xl fa-gas-pump color-orange"></em>
+						<div class="row no-padding"><a href="{% url 'fuellog:entry_list' %}"><em class="fas fa-xl fa-gas-pump color-orange"></em></a>
 							<div class="large">${{ytd_fuel_total|intcomma}}</div>
 							<div class="text-muted">YTD Fuel</div>
 						</div>
@@ -105,7 +105,10 @@ Dashboard
 				<div class="panel panel-default">
 					<div class="panel-heading">
 						Recent Fuel 
-							<span class="pull-right"><a class="btn btn-sm btn-primary" href="{% url 'fuellog:create_entry' %}">Add Fuel</a></span></div>
+							<span class="pull-right">
+								<a class="btn btn-sm btn-outline-primary" href="{% url 'fuellog:entry_list' %}">View All</a>
+								<a class="btn btn-sm btn-outline-primary" href="{% url 'fuellog:create_entry' %}">Add Fuel</a>
+							</span></div>
 			<div class="panel-body timeline-container">
             <table class="table">
             <tr>
@@ -165,7 +168,10 @@ Dashboard
         <div class="panel panel-default">
 					<div class="panel-heading">
 						Recent Damage
-						<span class="pull-right"><a class="btn btn-sm btn-primary" href="{% url 'vehicles:new_damage' %}">New Damage</a></span></div>
+						<span class="pull-right">
+							<a class="btn btn-sm btn-outline-primary" href="{% url 'vehicles:damage_list' %}">View All</a>
+							<a class="btn btn-sm btn-outline-primary" href="{% url 'vehicles:new_damage' %}">New Damage</a>
+						</span></div>
 					<div class="panel-body">
             <table class="table">
             <tr>
@@ -281,7 +287,11 @@ Dashboard
 			<div class="col-md-6">
 				<div class="panel panel-default ">
 					<div class="panel-heading">
-						Upcoming Service <span class="pull-right"><a class="btn btn-sm btn-primary" href="{% url 'service:create_scheduled' %}">Schedule New</a></span></div>
+						Upcoming Service 
+						<span class="pull-right">
+							<a class="btn btn-sm btn-outline-primary" href="{% url 'service:service_list' %}">View All</a>
+							<a class="btn btn-sm btn-outline-primary" href="{% url 'service:create_scheduled' %}">Schedule New</a>
+						</span></div>
 					<div class="panel-body timeline-container">
             <table class="table">
               <tr>
@@ -316,7 +326,10 @@ Dashboard
 				<div class="panel panel-default ">
 					<div class="panel-heading">
 						Recent Service
-						<span class="pull-right"><a class="btn btn-sm btn-primary" href="{% url 'service:create_record' %}">Add Record</a></span></div>
+						<span class="pull-right">
+							<a class="btn btn-sm btn-outline-primary" href="{% url 'service:service_list' %}">View All</a>
+							<a class="btn btn-sm btn-outline-primary" href="{% url 'service:create_record' %}">Add Record</a>
+						</span></div>
 					<div class="panel-body timeline-container">
             <table class="table">
               <tr>

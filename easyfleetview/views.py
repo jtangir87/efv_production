@@ -19,18 +19,17 @@ class Dashboard(ListView):
 
     def get_context_data(self, **kwargs):
         context = super(Dashboard, self).get_context_data(**kwargs)
+        today = datetime.now()
         last_fuel = FuelEntry.objects.order_by('vehicle_id', '-date').distinct('vehicle_id')
         context['recent_fuel'] = FuelEntry.objects.filter(id__in=last_fuel).order_by('vehicle')
-        context['upcoming_service'] = ServiceRecord.objects.filter(completed=False).order_by('vehicle')[:5]
+        context['upcoming_service'] = ServiceRecord.objects.filter(completed=False).order_by('vehicle')[:15]
         context['recent_service'] = ServiceRecord.objects.filter(completed=True).order_by('-date')[:5]
         context ['recent_damage'] = DamageReport.objects.order_by('-date')[:5]
         context ['vehicle_count'] = Vehicle.objects.all().count()
         #Calculate ytd fuel total
-        today = datetime.now()
         ytd_fuel_total = FuelEntry.objects.filter(date__year=today.year).aggregate(Sum('cost'))
         context['ytd_fuel_total'] = ytd_fuel_total['cost__sum']
         #Calculate ytd service total
-        today = datetime.now()
         ytd_serv_total = ServiceRecord.objects.filter(date__year=today.year).aggregate(Sum('cost'))
         context['ytd_serv_total'] = ytd_serv_total['cost__sum']
         #Calculate lifetime service total
