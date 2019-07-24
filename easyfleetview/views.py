@@ -87,7 +87,7 @@ def trialsignup(request):
                 "New tial sign up",
                 content,
                 "Your website" +'',
-                ['jared.tangir@gmail.com'],
+                ['support@easyfleetview.com'],
                 headers = {'Reply-To': email }
             )
             email.send()
