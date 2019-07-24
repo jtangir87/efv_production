@@ -19,7 +19,7 @@ from .views import SignUpComplete
 from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('superadmin/', admin.site.urls),
     path('', views.trialsignup, name='public'),
     path('submitted', SignUpComplete.as_view(), name='signup_complete'),
 
