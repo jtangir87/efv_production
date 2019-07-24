@@ -42,6 +42,7 @@ SHARED_APPS = [
     'bootstrap4',
     'bootstrap_datepicker_plus',
     'crispy_forms',
+    'awesome_django_timezones',
 ]
 
 TENANT_APPS = [
@@ -72,6 +73,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'awesome_django_timezones.middleware.TimezonesMiddleware',
 ]
 
 PUBLIC_SCHEMA_URLCONF = 'easyfleetview.public_urls'
