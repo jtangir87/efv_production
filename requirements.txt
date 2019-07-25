@@ -8,6 +8,7 @@ django-allauth==0.39.1
 django-bootstrap-datepicker-plus==3.0.5
 django-bootstrap4==0.0.8
 django-crispy-forms==1.7.2
+django-el-pagination==3.2.4   
 django-tenants==2.2.3
 idna==2.8
 ipapi==0.5.2

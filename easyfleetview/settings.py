@@ -43,6 +43,7 @@ SHARED_APPS = [
     'bootstrap_datepicker_plus',
     'crispy_forms',
     'awesome_django_timezones',
+    'el_pagination',
 ]
 
 TENANT_APPS = [
