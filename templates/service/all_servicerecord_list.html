@@ -2,7 +2,7 @@
 {% load static %}
 {% load humanize %}
 {% block breadcrumb %}
-<li>Service</li>
+<li><a href="{% url 'service:service_list' %}">Service</a></li>
 <li class="active">All</li>
 {% endblock breadcrumb %}
 
@@ -27,7 +27,6 @@ Vehicle Service
             <th scope="col">Cost</th>
           </tr>
           {% for servicerecord in object_list  %}
-          {% if servicerecord.is_completed %}
           <tr>
             <td scope="row"><a href="{% url 'service:record_detail' pk=servicerecord.pk %}">{{servicerecord.vehicle.name}}</a></td>
             <td>{{servicerecord.date}}</td>
@@ -35,7 +34,6 @@ Vehicle Service
             <td>{{servicerecord.description | slice:'50'}}</td>
             <td>${{servicerecord.cost | intcomma}}</td>
           </tr>
-          {% endif %}
           {% empty %}
               <li>No entries yet</li>
           {% endfor %}

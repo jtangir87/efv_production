@@ -43,7 +43,7 @@ class ServiceList(ListView):
     def get_context_data(self, **kwargs):
         context = super(ServiceList, self).get_context_data(**kwargs)
         context["is_complete"] = ServiceRecord.objects.filter(completed=True).order_by('-date')[:25]
-        context["is_scheduled"] = ServiceRecord.objects.filter(completed=False).order_by('date')
+        context["is_scheduled"] = ServiceRecord.objects.filter(completed=False).order_by('date')[:25]
         return context
     
 
@@ -52,6 +52,10 @@ class AllServiceList(ListView):
     model = ServiceRecord
     template_name = 'service/all_servicerecord_list.html'
     paginate_by = 25
+
+    def get_queryset(self):
+        return ServiceRecord.objects.filter(completed=True).order_by('-date')
+    
 
 class VehicleServiceList(ListView):
     model = ServiceRecord
