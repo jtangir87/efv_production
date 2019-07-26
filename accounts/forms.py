@@ -53,3 +53,19 @@ class UpdateUserForm(UserChangeForm):
             'is_staff': "Designates whether the user can control admin functions of the site.",
             "is_active": "Unselect instead of deleting accounts.",
         }
+
+class UpdateCurrentUserForm(UserChangeForm):
+    phone_number = forms.CharField(required=True)
+
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'phone_number', 
+        ]
+        help_texts = {
+            'username': "Required. Letters, digits and @/./+/-/_ only.",
+        }

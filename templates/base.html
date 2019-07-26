@@ -109,7 +109,7 @@
         <em class="far fa-user">&nbsp;</em> Profile <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"></span>
 					</a>
         	<ul class="children collapse" id="sub-item-1">
-						<li><a class="" href="{% url 'accounts:user_detail' pk=request.user.pk %}">
+						<li><a class="" href="{% url 'accounts:current_user_detail' %}">
 							<span class="far fa-id-card">&nbsp;</span> Update Profile
 						</a></li>
 						<li><a class="" href="{% url 'accounts:password_change' %}">

@@ -11,12 +11,16 @@ Users
 
 
 {% block content %}
+
+{% if request.user.is_staff %}
+
   <div class="col-md-8">
     <div class="panel panel-primary">
       <div class="panel-heading"><a class="btn btn-lg btn-outline-light" href="{% url 'accounts:create_user' %}">Add New User</a>
        </div>
 
         <div class='panel-body'>
+
         <table class="table">
         <tr>
           <th scope="col">Name</th>
@@ -40,6 +44,9 @@ Users
       {% endfor %}
 
       </table>
+      {% else %}
+      <h5>You do not have permission to access this page.</h5>
+      {% endif %}
     </div>
   </div> 
 

@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView
-from .forms import CreateUserForm, UserSignUpForm, UpdateUserForm
+from .forms import CreateUserForm, UserSignUpForm, UpdateUserForm, UpdateCurrentUserForm
 from django.contrib.auth.models import User
 from .models import UserProfile
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.mixins import PermissionRequiredMixin
 # Create your views here.
 
 class SignUp(CreateView):
@@ -80,11 +81,38 @@ class UpdateUser(UpdateView):
     
             return super(UpdateUser, self).form_valid(form)
 
-   
 class UserDetail(DetailView):
     model = User
     template_name='accounts/user_detail.html'
 
     
+class CurrentUserDetail(DetailView):
+    model = User
+    template_name='accounts/current_user_detail.html'
+
+    def get_object(self):
+        return self.request.user
+
+class UpdateCurrentUser(UpdateView):
+    model = User
+    form_class = UpdateCurrentUserForm
+    template_name = 'accounts/update_current_user_form.html'
+    success_url = '/accounts/users/current'
+
+    def get_object(self):
+        return self.request.user
+
+
+    def form_valid(self, form):
+            c = {'form': form, }
+            user = form.save(commit=False)
+            # Cleaned(normalized) data
+            phone_number = form.cleaned_data['phone_number']
+
+            user.save()
     
+            # Create UserProfile model
+            UserProfile.objects.update(user=user, phone_number=phone_number)
+    
+            return super(UpdateCurrentUser, self).form_valid(form)
     
