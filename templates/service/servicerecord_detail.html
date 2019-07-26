@@ -27,9 +27,6 @@ Service Record Details
             <h5 class='tab'>{{servicerecord.description|linebreaksbr}}</h5>
             <h5><strong>Logged by:</strong> {{servicerecord.user.get_full_name}}</h5>
             <a class="btn btn-warning" href="{% url 'service:update_record' pk=servicerecord.pk %}">Update</a>
-            {% if servicerecord.completed == False %}
-            <a class="btn btn-success" href="{% url 'service:complete_scheduled' pk=servicerecord.pk %}">Complete</a>
-            {% endif %}
 					</div>
 				</div>
 			</div>

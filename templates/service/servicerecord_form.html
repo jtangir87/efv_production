@@ -3,7 +3,7 @@
 {% load humanize %}
 
 {% block breadcrumb %}
-<li>Service</li>
+<li><a href="{% url 'service:service_list' %}">Service</a></li> 
 <li class="active">New Service</li>
 {% endblock breadcrumb %}
 

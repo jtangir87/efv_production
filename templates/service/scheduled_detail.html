@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block breadcrumb %}
+<li><a href="{% url 'service:service_list' %}">Service</a></li>
+<li class="active">Details</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+Scheduled Service Details
+{% endblock header %}
+
+{% block content %}
+	<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">Details</div>
+          <div class="panel-body">
+            <h3><a href="{% url 'vehicles:vehicle_detail' pk=servicerecord.vehicle.pk %}">{{servicerecord.vehicle.name }}</a></h3>
+            <h5><strong>Due Date :</strong> 
+            {% if servicerecord != Null and servicerecord.is_past_due %}
+            <span class='past_due'>{{servicerecord.date|default_if_none:""}}</span>
+            {% else %}
+            <span>{{servicerecord.date|default_if_none:""}}</span>
+            {% endif %}
+            <h5><strong>Due Mileage :</strong> 
+            {% if servicerecord.mileage != Null and servicerecord.is_past_mileage %}
+						<span class='past_due'>
+						{{servicerecord.mileage |default_if_none:"" | intcomma}}</span>
+						{% else %}
+						<span>{{servicerecord.mileage |default_if_none:"" | intcomma}}</span>
+						{% endif %}
+
+            <h5><strong>Description :</strong></h5> 
+            <h5 class='tab'>{{servicerecord.description|linebreaksbr}}</h5>
+            <h5><strong>Scheduled by:</strong> {{servicerecord.user.get_full_name}}</h5>
+            <a class="btn btn-warning" href="{% url 'service:update_scheduled' pk=servicerecord.pk %}">Update</a>
+            <a class="btn btn-success" href="{% url 'service:complete_scheduled' pk=servicerecord.pk %}">Complete</a>
+					</div>
+				</div>
+			</div>
+    </div><!-- /.row -->
+
+{% endblock content %}

@@ -106,87 +106,87 @@ Dashboard
 					<div class="panel-heading">
 						Recent Fuel 
 							<span class="pull-right">
-								<a class="btn btn-sm btn-outline-primary" href="{% url 'fuellog:entry_list' %}">View All</a>
-								<a class="btn btn-sm btn-outline-primary" href="{% url 'fuellog:create_entry' %}">Add Fuel</a>
+								<a class="btn btn-sm btn-primary" href="{% url 'fuellog:create_entry' %}">Add Fuel</a>
 							</span></div>
 			<div class="panel-body timeline-container">
-            <table class="table">
-            <tr>
-              <th scope="col">Vehicle</th>
-              <th scope="col">As of:</th>
-              <th scope="col">Current Fuel</th>
-              <th scope="col">Current Mileage</th>
-            </tr>
-            {% for fuel in recent_fuel   %}
-            <tr>
-              <td scope="row"><a href="{% url 'fuellog:entry_detail' pk=fuel.pk %}">{{fuel.vehicle.name}}</a></td>
-              <td>{{fuel.date | date:"m/d/y"}}</td>
-              <td>
-                {% if fuel.after %}
-                  {% if fuel.after == "EMPTY" %}
-                  <img src="{% static 'img/empty.png' %}" class="fuelicon" alt="">
-                  {% elif fuel.after == "1/8" %}
-                  <img src="{% static 'img/eighth.png' %}" class="fuelicon" alt="">
-                  {% elif fuel.after == "1/4" %}
-                  <img src="{% static 'img/quarter.png' %}" class="fuelicon" alt="">
-                  {% elif fuel.after == "1/2" %}
-                  <img src="{% static 'img/half.png' %}" class="fuelicon" alt="">
-                  {% elif fuel.after == "3/4" %}
-                  <img src="{% static 'img/3q.png' %}" class="fuelicon" alt="">
-                  {% elif fuel.after == "FULL" %}
-                  <img src="{% static 'img/full.png' %}" class="fuelicon" alt="">      
-                  {% else %}
-                  {{fuel.after}}
-                  {% endif %} 
-                  
-                {% else %}
-                    {% if fuel.current == "EMPTY" %}
-                    <img src="{% static 'img/empty.png' %}" class="fuelicon" alt="">
-                    {% elif fuel.current == "1/8" %}
-                    <img src="{% static 'img/eighth.png' %}" class="fuelicon" alt="">
-                    {% elif fuel.current == "1/4" %}
-                    <img src="{% static 'img/quarter.png' %}" class="fuelicon" alt="">
-                    {% elif fuel.current == "1/2" %}
-                    <img src="{% static 'img/half.png' %}" class="fuelicon" alt="">
-                    {% elif fuel.current == "3/4" %}
-                    <img src="{% static 'img/3q.png' %}" class="fuelicon" alt="">
-                    {% elif fuel.current == "FULL" %}
-                    <img src="{% static 'img/full.png' %}" class="fuelicon" alt="">      
-                    {% else %}
-                    {{fuel.current}}
-                   {% endif %}
+				<table class="table">
+				<tr>
+				<th scope="col">Vehicle</th>
+				<th scope="col">As of:</th>
+				<th scope="col">Current Fuel</th>
+				<th scope="col">Current Mileage</th>
+				</tr>
+				{% for fuel in recent_fuel   %}
+				<tr>
+				<td scope="row"><a href="{% url 'fuellog:entry_detail' pk=fuel.pk %}">{{fuel.vehicle.name}}</a></td>
+				<td>{{fuel.date | date:"m/d/y"}}</td>
+				<td>
+					{% if fuel.after %}
+					{% if fuel.after == "EMPTY" %}
+					<img src="{% static 'img/empty.png' %}" class="fuelicon" alt="">
+					{% elif fuel.after == "1/8" %}
+					<img src="{% static 'img/eighth.png' %}" class="fuelicon" alt="">
+					{% elif fuel.after == "1/4" %}
+					<img src="{% static 'img/quarter.png' %}" class="fuelicon" alt="">
+					{% elif fuel.after == "1/2" %}
+					<img src="{% static 'img/half.png' %}" class="fuelicon" alt="">
+					{% elif fuel.after == "3/4" %}
+					<img src="{% static 'img/3q.png' %}" class="fuelicon" alt="">
+					{% elif fuel.after == "FULL" %}
+					<img src="{% static 'img/full.png' %}" class="fuelicon" alt="">      
+					{% else %}
+					{{fuel.after}}
+					{% endif %} 
+					
+					{% else %}
+						{% if fuel.current == "EMPTY" %}
+						<img src="{% static 'img/empty.png' %}" class="fuelicon" alt="">
+						{% elif fuel.current == "1/8" %}
+						<img src="{% static 'img/eighth.png' %}" class="fuelicon" alt="">
+						{% elif fuel.current == "1/4" %}
+						<img src="{% static 'img/quarter.png' %}" class="fuelicon" alt="">
+						{% elif fuel.current == "1/2" %}
+						<img src="{% static 'img/half.png' %}" class="fuelicon" alt="">
+						{% elif fuel.current == "3/4" %}
+						<img src="{% static 'img/3q.png' %}" class="fuelicon" alt="">
+						{% elif fuel.current == "FULL" %}
+						<img src="{% static 'img/full.png' %}" class="fuelicon" alt="">      
+						{% else %}
+						{{fuel.current}}
+					{% endif %}
 
-                {% endif %}
-                </td>
-                <td>{{fuel.vehicle.current_mileage|intcomma}}</td>
-                             
-            </tr>
-            {% endfor %}   
-           </table>
+					{% endif %}
+					</td>
+					<td>{{fuel.vehicle.current_mileage|intcomma}}</td>
+								
+				</tr>
+				{% endfor %}   
+			</table>
+		   		<a class="btn btn-sm btn-outline-primary" href="{% url 'fuellog:entry_list' %}">View All</a>
 			  	</div>
 			  </div>
         <div class="panel panel-default">
 					<div class="panel-heading">
 						Recent Damage
 						<span class="pull-right">
-							<a class="btn btn-sm btn-outline-primary" href="{% url 'vehicles:damage_list' %}">View All</a>
-							<a class="btn btn-sm btn-outline-primary" href="{% url 'vehicles:new_damage' %}">New Damage</a>
+							<a class="btn btn-sm btn-primary" href="{% url 'vehicles:new_damage' %}">New Damage</a>
 						</span></div>
 					<div class="panel-body">
-            <table class="table">
-            <tr>
-              <th scope="col">Vehicle</th>
-              <th scope="col">Date</th>
-              <th scope="col">Driver</th>
-            </tr>
-            {% for damage in recent_damage %}
-            <tr>
-              <td scope="row"><a href="{% url 'vehicles:damage_detail' pk=damage.pk %}">{{damage.vehicle.name}}</a></td>
-              <td>{{damage.date | date:"M d, Y"}}</td>
-              <td>{{damage.driver}}</td>
-            </tr>
-            {% endfor %} 
-          </table>
+					<table class="table">
+						<tr>
+						<th scope="col">Vehicle</th>
+						<th scope="col">Date</th>
+						<th scope="col">Driver</th>
+						</tr>
+						{% for damage in recent_damage %}
+						<tr>
+						<td scope="row"><a href="{% url 'vehicles:damage_detail' pk=damage.pk %}">{{damage.vehicle.name}}</a></td>
+						<td>{{damage.date | date:"M d, Y"}}</td>
+						<td>{{damage.driver}}</td>
+						</tr>
+						{% endfor %} 
+					</table>
+		  			<a class="btn btn-sm btn-outline-primary" href="{% url 'vehicles:damage_list' %}">View All</a>
 					</div>
 				</div>
 				{% comment %} <div class="panel panel-default">
@@ -289,36 +289,36 @@ Dashboard
 					<div class="panel-heading">
 						Upcoming Service 
 						<span class="pull-right">
-							<a class="btn btn-sm btn-outline-primary" href="{% url 'service:service_list' %}">View All</a>
-							<a class="btn btn-sm btn-outline-primary" href="{% url 'service:create_scheduled' %}">Schedule New</a>
+							<a class="btn btn-sm btn-primary" href="{% url 'service:create_scheduled' %}">Schedule New</a>
 						</span></div>
 					<div class="panel-body timeline-container">
-            <table class="table">
-              <tr>
-                <th scope="col">Vehicle</th>
-                <th scope="col">Due Date</th>
-                <th scope="col">Due Mileage</th>
-                <th scope="col">Service</th>
-              </tr>
-              {% for upcoming in upcoming_service %}
-              <tr>
-                <td scope="row"><a href="{% url 'service:record_detail' pk=upcoming.pk %}">{{upcoming.vehicle.name }}</a></td>
-                {% if upcoming.date != Null and upcoming.is_past_due %}
-                <td class='past_due'>
-                {{upcoming.date |default_if_none:""}}</td>
-                {% else %}
-                <td>{{upcoming.date|default_if_none:""}}</td>
-                {% endif %}
-                {% if upcoming.mileage != Null and upcoming.is_past_mileage %}
-                <td class='past_due'>
-                {{upcoming.mileage |default_if_none:"" | intcomma}}</td>
-                {% else %}
-                <td>{{upcoming.mileage |default_if_none:"" | intcomma}}</td>
-                {% endif %}
-                <td>{{upcoming.description|slice:'20'}}</td>
-              </tr>
-            {% endfor %}     
-            </table>
+					<table class="table">
+					<tr>
+						<th scope="col">Vehicle</th>
+						<th scope="col">Due Date</th>
+						<th scope="col">Due Mileage</th>
+						<th scope="col">Service</th>
+					</tr>
+					{% for upcoming in upcoming_service %}
+					<tr>
+						<td scope="row"><a href="{% url 'service:record_detail' pk=upcoming.pk %}">{{upcoming.vehicle.name }}</a></td>
+						{% if upcoming.date != Null and upcoming.is_past_due %}
+						<td class='past_due'>
+						{{upcoming.date |default_if_none:""}}</td>
+						{% else %}
+						<td>{{upcoming.date|default_if_none:""}}</td>
+						{% endif %}
+						{% if upcoming.mileage != Null and upcoming.is_past_mileage %}
+						<td class='past_due'>
+						{{upcoming.mileage |default_if_none:"" | intcomma}}</td>
+						{% else %}
+						<td>{{upcoming.mileage |default_if_none:"" | intcomma}}</td>
+						{% endif %}
+						<td>{{upcoming.description|slice:'20'}}</td>
+					</tr>
+					{% endfor %}     
+					</table>
+					<a class="btn btn-sm btn-outline-primary" href="{% url 'service:service_list' %}">View All</a>
 					</div>
 				</div>
 			</div><!--/.col-->
@@ -327,27 +327,26 @@ Dashboard
 					<div class="panel-heading">
 						Recent Service
 						<span class="pull-right">
-							<a class="btn btn-sm btn-outline-primary" href="{% url 'service:service_list' %}">View All</a>
-							<a class="btn btn-sm btn-outline-primary" href="{% url 'service:create_record' %}">Add Record</a>
+							<a class="btn btn-sm btn-primary" href="{% url 'service:create_record' %}">Add Record</a>
 						</span></div>
-					<div class="panel-body timeline-container">
-            <table class="table">
-              <tr>
-                <th scope="col">Vehicle</th>
-                <th scope="col">Date</th>
-                <th scope="col">Mileage</th>
-                <th scope="col">Service</th>
-              </tr>
-              {% for recent in recent_service %}
-              <tr>
-                <td scope="row"><a href="{% url 'service:record_detail' pk=recent.pk %}">{{recent.vehicle.name}}</a></td>
-                <td>{{recent.date|default_if_none:""}}</td>
-                <td>{{recent.mileage |default_if_none:"" | intcomma}}</td>
-                <td>{{recent.description|slice:'20'}}</td>
-              </tr>
-            {% endfor %}     
-          </table>
-			
+				<div class="panel-body timeline-container">
+					<table class="table">
+					<tr>
+						<th scope="col">Vehicle</th>
+						<th scope="col">Date</th>
+						<th scope="col">Mileage</th>
+						<th scope="col">Service</th>
+					</tr>
+					{% for recent in recent_service %}
+					<tr>
+						<td scope="row"><a href="{% url 'service:record_detail' pk=recent.pk %}">{{recent.vehicle.name}}</a></td>
+						<td>{{recent.date|default_if_none:""}}</td>
+						<td>{{recent.mileage |default_if_none:"" | intcomma}}</td>
+						<td>{{recent.description|slice:'20'}}</td>
+					</tr>
+					{% endfor %}     
+					</table>
+					<a class="btn btn-sm btn-outline-primary" href="{% url 'service:service_list' %}">View All</a>
 					</div>
 				</div>
 			</div><!--/.col-->

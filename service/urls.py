@@ -16,8 +16,9 @@ Including another URLconf
 
 from django.urls import path
 from service.views import (CreateServiceRecord, UpdateServiceRecord,
-    ServiceRecordDetail, ServiceList, AllServiceList,
-    CreateScheduledService, CompleteScheduled, VehicleServiceList
+    ServiceRecordDetail, ServiceList, AllServiceList, AllScheduledList,
+    CreateScheduledService, CompleteScheduled, VehicleServiceList,
+    ScheduledDetail, UpdateScheduledService
     )
 
 
@@ -28,9 +29,12 @@ urlpatterns = [
     path('new', CreateServiceRecord.as_view(), name='create_record'),
     path('update/<int:pk>', UpdateServiceRecord.as_view(), name='update_record'),
     path('<int:pk>', ServiceRecordDetail.as_view(), name='record_detail'),
-    path('schedule/new', CreateScheduledService.as_view(), name='create_scheduled'),
-    path('schedule/<int:pk>/complete', CompleteScheduled.as_view(), name='complete_scheduled'),
+    path('scheduled/new', CreateScheduledService.as_view(), name='create_scheduled'),
+    path('scheduled/<int:pk>', ScheduledDetail.as_view(), name='scheduled_detail'),
+    path('scheduled/update/<int:pk>', UpdateScheduledService.as_view(), name='update_scheduled'),
+    path('scheduled/complete/<int:pk>', CompleteScheduled.as_view(), name='complete_scheduled'),
     path('vehicle/<int:pk>/all/', VehicleServiceList.as_view(), name='vehicle_all'),
-    path('service/all/', AllServiceList.as_view(), name="service_all"),
+    path('records/all/', AllServiceList.as_view(), name="service_all"),
+    path('scheduled/all/', AllScheduledList.as_view(), name="scheduled_all"),
 
 ]

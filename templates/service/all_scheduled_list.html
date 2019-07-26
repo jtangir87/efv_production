@@ -3,11 +3,11 @@
 {% load humanize %}
 {% block breadcrumb %}
 <li><a href="{% url 'service:service_list' %}">Service</a></li>
-<li class="active">All Records</li>
+<li class="active">All Scheduled</li>
 {% endblock breadcrumb %}
 
 {% block header %}
-Vehicle Service
+Scheduled Vehicle Service
 {% endblock header %}
 
 
@@ -16,23 +16,31 @@ Vehicle Service
 	<div class="row">
   <div class="col-md-8">
     <div class="panel panel-primary">
-      <div class="panel-heading">All Service Records</div>
+      <div class="panel-heading">All Scheduled Service</div>
       <div class="panel-body">
         <table class='table'>
           <tr>
             <th scope="col">Vehicle</th>
             <th scope="col">Date</th>
-            <th scope="col">Servicer</th>
+            <th scope="col">Mileage</th>
             <th scope="col">Description</th>
-            <th scope="col">Cost</th>
           </tr>
-          {% for servicerecord in records  %}
+          {% for upcoming in records  %}
           <tr>
-            <td scope="row"><a href="{% url 'service:record_detail' pk=servicerecord.pk %}">{{servicerecord.vehicle.name}}</a></td>
-            <td>{{servicerecord.date}}</td>
-            <td>{{servicerecord.servicer}}</td>
-            <td>{{servicerecord.description | slice:'50'}}</td>
-            <td>${{servicerecord.cost | intcomma}}</td>
+            <td scope="row"><a href="{% url 'service:scheduled_detail' pk=upcoming.pk %}">{{upcoming.vehicle.name}}</a></td>
+            {% if upcoming.date != Null and upcoming.is_past_due %}
+						<td class='past_due'>
+						{{upcoming.date |default_if_none:""}}</td>
+						{% else %}
+						<td>{{upcoming.date|default_if_none:""}}</td>
+						{% endif %}
+						{% if upcoming.mileage != Null and upcoming.is_past_mileage %}
+						<td class='past_due'>
+						{{upcoming.mileage |default_if_none:"" | intcomma}}</td>
+						{% else %}
+						<td>{{upcoming.mileage |default_if_none:"" | intcomma}}</td>
+						{% endif %}
+						<td>{{upcoming.description|slice:'20'}}</td>
           </tr>
           {% empty %}
               <li>No entries yet</li>

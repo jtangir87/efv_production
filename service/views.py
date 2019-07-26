@@ -52,7 +52,7 @@ class AllServiceList(ListView):
     model = ServiceRecord
     template_name = 'service/all_servicerecord_list.html'
     context_object_name = "records"
-    paginate_by = 10
+    paginate_by = 25
 
     def get_queryset(self):
         return ServiceRecord.objects.filter(completed=True).order_by('-date')
@@ -89,6 +89,24 @@ class CreateScheduledService(CreateView):
         self.object.save()
         return super().form_valid(form)
 
+class UpdateScheduledService(UpdateView):
+    model = ServiceRecord
+    fields = ('vehicle', 'description', 'date', 'mileage')
+    template_name_suffix = '_update_form'
+    def get_form(self):
+        form = super().get_form()
+        form.fields['date'].widget = DateTimePickerInput(format='%m-%d-%Y')
+        return form
+
+    def form_valid(self,form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        self.object.completed = False
+        self.object.save()
+        return super().form_valid(form)
+
+
+
 class CompleteScheduled(UpdateView):
     model = ServiceRecord
     fields = ('vehicle', 'servicer', 'invoice', 'cost', 'mileage', 'description')
@@ -105,3 +123,16 @@ class CompleteScheduled(UpdateView):
 
         Vehicle.objects.filter(id=vehicle_id).update(current_mileage=mileage)
         return super().form_valid(form)
+
+class AllScheduledList(ListView):
+    model = ServiceRecord
+    template_name = 'service/all_scheduled_list.html'
+    context_object_name = "records"
+    paginate_by = 25
+
+    def get_queryset(self):
+        return ServiceRecord.objects.filter(completed=False).order_by('date')
+
+class ScheduledDetail(DetailView):
+    model = ServiceRecord
+    template_name = 'service/scheduled_detail.html'
