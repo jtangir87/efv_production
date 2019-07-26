@@ -20,7 +20,8 @@
 					<div class="panel-heading">Details</div>
             <div class="panel-body">
             <h5><strong>Driver :</strong> {{damagereport.driver}}</h5>
-            <h5><strong>Description :</strong> {{damagereport.description}}</h5>
+            <h5><strong>Description :</strong> </h5>
+            <h5 class='tab'>{{damagereport.description|linebreaksbr}}</h5>
             <h5><strong>Photos:</strong></h5>
             <h5><strong>Logged by:</strong> {{damagereport.user.get_full_name}}</h5>
             <div class="row gallery">
@@ -30,7 +31,7 @@
                 </div>
               {% endfor %}
               </div>  
-               <a class="btn btn-warning" href="#">Update</a>
+               <a class="btn btn-warning" href="{% url 'vehicles:damage_update' pk=damagereport.pk %}">Update</a>
                <a class="btn btn-danger" href="#">Delete</a>
             
 					</div>
