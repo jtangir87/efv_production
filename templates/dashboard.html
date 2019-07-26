@@ -301,7 +301,7 @@ Dashboard
 					</tr>
 					{% for upcoming in upcoming_service %}
 					<tr>
-						<td scope="row"><a href="{% url 'service:record_detail' pk=upcoming.pk %}">{{upcoming.vehicle.name }}</a></td>
+						<td scope="row"><a href="{% url 'service:scheduled_detail' pk=upcoming.pk %}">{{upcoming.vehicle.name }}</a></td>
 						{% if upcoming.date != Null and upcoming.is_past_due %}
 						<td class='past_due'>
 						{{upcoming.date |default_if_none:""}}</td>
