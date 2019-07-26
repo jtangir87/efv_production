@@ -22,8 +22,8 @@
             <h5><strong>Driver :</strong> {{damagereport.driver}}</h5>
             <h5><strong>Description :</strong> </h5>
             <h5 class='tab'>{{damagereport.description|linebreaksbr}}</h5>
-            <h5><strong>Photos:</strong></h5>
-            <h5><strong>Logged by:</strong> {{damagereport.user.get_full_name}}</h5>
+            <h5><strong>Logged by :</strong> {{damagereport.user.get_full_name}}</h5>
+            <h5><strong>Photos :</strong></h5>
             <div class="row gallery">
               {% for d in damage_images  %}
                 <div class="col-md-6">
