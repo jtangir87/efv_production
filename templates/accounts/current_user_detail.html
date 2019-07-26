@@ -21,7 +21,6 @@ User Details
           <h5><strong>Username :</strong> {{ user.username }}</h5>
           <h5><strong>Email :</strong> {{user.email |urlize }}</h5>
           <h5><strong>Phone Number :</strong> {{user.userprofile.phone_number|phone_number}}</h5>
-          </h5>
           <a class="btn btn-warning" href="{% url 'accounts:update_current_user'%}">Update</a>
 					</div>
 				</div>
