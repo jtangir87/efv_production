@@ -51,7 +51,8 @@ class ServiceList(ListView):
 class AllServiceList(ListView):
     model = ServiceRecord
     template_name = 'service/all_servicerecord_list.html'
-    paginate_by = 25
+    context_object_name = "records"
+    paginate_by = 10
 
     def get_queryset(self):
         return ServiceRecord.objects.filter(completed=True).order_by('-date')
