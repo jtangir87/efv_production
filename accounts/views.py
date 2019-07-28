@@ -31,6 +31,7 @@ class UserList(ListView):
     model = User
     template_name = 'accounts/user_list.html'
     context_object_name = 'users'
+    paginate_by = 25
 
     def get_queryset(self):
         user_list = User.objects.filter(is_superuser=False).order_by('last_name')

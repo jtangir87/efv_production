@@ -14,6 +14,7 @@ from django.db.models import Sum
 # Create your views here.
 class VehicleList(ListView):
     model = Vehicle
+    paginate_by = 25
 
 
 
