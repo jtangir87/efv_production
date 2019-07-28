@@ -3,7 +3,7 @@ from django.db.models import Sum
 from vehicles.models import Vehicle
 from django.urls import reverse
 from django.utils import timezone
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from django.contrib.auth import get_user_model
 from fuellog.models import FuelEntry
 User = get_user_model()
@@ -45,6 +45,18 @@ class ServiceRecord(models.Model):
     @property
     def is_past_mileage(self):
         return self.vehicle.current_mileage > self.mileage
+
+    @property
+    def miles_due_soon(self):
+        return self.vehicle.thousand_miles > self.mileage
+
+    @property
+    def date_due_soon(self):
+        ninety_days = (date.today()+timedelta(days=90)).isoformat()
+        return self.date.isoformat() <= ninety_days
+    
+
+
 
 
 

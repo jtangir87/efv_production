@@ -9,7 +9,8 @@ from django_tenants.utils import remove_www
 from django.core.mail import EmailMessage
 from django.template.loader import get_template
 from django.db.models import Sum
-from datetime import datetime
+from django.db.models.functions import Extract
+from datetime import datetime, date, timedelta
 from django.http import HttpResponse
 
 class Dashboard(ListView):
@@ -22,7 +23,7 @@ class Dashboard(ListView):
         today = datetime.now()
         last_fuel = FuelEntry.objects.order_by('vehicle_id', '-date').distinct('vehicle_id')
         context['recent_fuel'] = FuelEntry.objects.filter(id__in=last_fuel).order_by('vehicle')
-        context['upcoming_service'] = ServiceRecord.objects.filter(completed=False).order_by('date')[:15]
+        context['upcoming_service'] = ServiceRecord.objects.filter(completed=False).order_by('vehicle')
         context['recent_service'] = ServiceRecord.objects.filter(completed=True).order_by('-date')[:5]
         context ['recent_damage'] = DamageReport.objects.order_by('-date')[:5]
         context ['vehicle_count'] = Vehicle.objects.all().count()

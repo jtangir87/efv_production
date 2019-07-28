@@ -29,6 +29,7 @@ class CreateEntry(CreateView):
 
 
         Vehicle.objects.filter(id=vehicle_id).update(current_mileage=mileage)
+        Vehicle.objects.filter(id=vehicle_id).update(thousand_miles=int(mileage + 1000))
         return super().form_valid(form)
 
 class UpdateEntry(UpdateView):

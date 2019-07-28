@@ -300,6 +300,9 @@ Dashboard
 						<th scope="col">Service</th>
 					</tr>
 					{% for upcoming in upcoming_service %}
+					{% if upcoming.mileage != Null and upcoming.miles_due_soon or upcoming.date != Null and upcoming.date_due_soon %}
+					
+
 					<tr>
 						<td scope="row"><a href="{% url 'service:scheduled_detail' pk=upcoming.pk %}">{{upcoming.vehicle.name }}</a></td>
 						{% if upcoming.date != Null and upcoming.is_past_due %}
@@ -316,8 +319,10 @@ Dashboard
 						{% endif %}
 						<td>{{upcoming.description|slice:'20'}}</td>
 					</tr>
+					{% endif %}
 					{% endfor %}     
 					</table>
+
 					<a class="btn btn-sm btn-outline-primary" href="{% url 'service:scheduled_all' %}">View All</a>
 					</div>
 				</div>

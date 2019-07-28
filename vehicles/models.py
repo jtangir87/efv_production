@@ -16,6 +16,7 @@ class Vehicle(models.Model):
     license_plate = models.CharField(blank=True, max_length=100)
     purchase_date = models.DateField()
     current_mileage = models.IntegerField(blank=True, null=True)
+    thousand_miles = models.IntegerField(blank=True, null=True)
 
     class Meta:
         ordering = ['name']
