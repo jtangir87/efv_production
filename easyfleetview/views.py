@@ -86,7 +86,7 @@ def trialsignup(request):
             email = EmailMessage(
                 "New tial sign up",
                 content,
-                "Your website" +'',
+                "Easy Fleet View" +'',
                 ['support@easyfleetview.com'],
                 headers = {'Reply-To': email }
             )
