@@ -31,9 +31,11 @@
                 </div>
               {% endfor %}
               </div>  
+              {% if request.user.is_staff %}
+              
                <a class="btn btn-warning" href="#">Update</a>
                <a class="btn btn-danger" href="#">Delete</a>
-            
+              {% endif %}
 					</div>
 				</div>
 			</div>

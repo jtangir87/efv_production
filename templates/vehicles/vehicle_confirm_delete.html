@@ -21,6 +21,9 @@ Confirm Delete Vehicle
             <div class="panel-body">
             {% load bootstrap4 %}
             {% bootstrap_javascript jquery='full' %}
+            {% if request.user.is_staff %}
+            
+            
             {{ form.media }}          
                 <form method="post">
 
@@ -29,6 +32,9 @@ Confirm Delete Vehicle
                   {% bootstrap_button "Yes, Delete it!" button_type="submit" button_class="btn-danger"%}
 
                  </form>
+             {% else %}
+             <h5>You do not have permission to access this page.</h5>
+             {% endif %}
             </div>
           </div>  
         </div>  
