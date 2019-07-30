@@ -29,13 +29,23 @@ class CreateEntry(CreateView):
 
 
         Vehicle.objects.filter(id=vehicle_id).update(current_mileage=mileage)
-        Vehicle.objects.filter(id=vehicle_id).update(thousand_miles=int(mileage + 1000))
+        Vehicle.objects.filter(id=vehicle_id).update(five_hundred_miles=int(mileage + 500))
         return super().form_valid(form)
 
 class UpdateEntry(UpdateView):
     model = FuelEntry
     fields = ('after', 'gallons', 'cost')
-    template_name_suffix = '_update_form'
+    template_name_suffix = '_update_form'   
+      
+    def form_valid(self,form):
+        self.object = form.save(commit=False)
+        self.object.user = self.request.user
+        
+        self.object.save()
+
+        return super().form_valid(form)
+
+
 
 
 class EntryDetail(DetailView):

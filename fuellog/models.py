@@ -10,7 +10,7 @@ User = get_user_model()
 # Create your models here.
 class FuelEntry(models.Model):
     vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(auto_now=True)
     fuel_choices = (
         ('EMPTY', 'Empty'),
         ('1/8', '1/8'),

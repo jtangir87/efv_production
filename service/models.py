@@ -48,7 +48,7 @@ class ServiceRecord(models.Model):
 
     @property
     def miles_due_soon(self):
-        return self.vehicle.thousand_miles > self.mileage
+        return self.vehicle.five_hundred_miles > self.mileage
 
     @property
     def date_due_soon(self):
