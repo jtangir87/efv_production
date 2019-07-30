@@ -7,7 +7,7 @@
 {% endblock breadcrumb %}
 
 {% block header %}
-Vehicle Service
+All Service Records
 {% endblock header %}
 
 
@@ -16,7 +16,7 @@ Vehicle Service
 	<div class="row">
   <div class="col-md-8">
     <div class="panel panel-primary">
-      <div class="panel-heading">All Service Records</div>
+      <div class="panel-heading"><a class="btn btn-lg btn-outline-light" href="{% url 'service:create_record' %}">Add New Record</a></div>
       <div class="panel-body">
         <table class='table'>
           <tr>

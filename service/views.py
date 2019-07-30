@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from datetime import date
 from vehicles.models import Vehicle
 from .models import ServiceRecord
@@ -77,6 +77,8 @@ class VehicleServiceList(ListView):
 class CreateScheduledService(CreateView):
     model = ServiceRecord
     fields = ('vehicle', 'description', 'date', 'mileage')
+    success_url = '/service/scheduled/all/'
+
     def get_form(self):
         form = super().get_form()
         form.fields['date'].widget = DateTimePickerInput(format='%m-%d-%Y')

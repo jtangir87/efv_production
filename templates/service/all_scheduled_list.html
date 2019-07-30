@@ -7,7 +7,7 @@
 {% endblock breadcrumb %}
 
 {% block header %}
-Scheduled Vehicle Service
+All Scheduled Vehicle Service
 {% endblock header %}
 
 
@@ -16,7 +16,7 @@ Scheduled Vehicle Service
 	<div class="row">
   <div class="col-md-8">
     <div class="panel panel-primary">
-      <div class="panel-heading">All Scheduled Service</div>
+      <div class="panel-heading"><a class="btn btn-lg btn-outline-light" href="{% url 'service:create_scheduled' %}">Schedule New Service</a></div>
       <div class="panel-body">
         <table class='table'>
           <tr>
