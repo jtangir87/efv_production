@@ -28,5 +28,6 @@ urlpatterns = [
     path('vehicles/', include('vehicles.urls')),
     path('fuel/', include('fuellog.urls')),
     path('service/', include('service.urls')),
+    path('client/', include('customer.urls')),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

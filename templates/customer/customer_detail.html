@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% load template_filters %}
+
+{% block breadcrumb %}
+<li class="active">Account</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+Account Details
+{% endblock header %}
+
+{% block content %}
+ {% if request.user.is_staff %}
+	<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">{{request.tenant.name}}</div>
+          <div class="panel-body">
+          <h5><strong>Paid Until :</strong> {{ request.tenant.paid_until }}</h5>
+          <h5><strong>Created On :</strong> {{request.tenant.created_on }}</h5>
+          <h5><strong>On Trial: </strong>
+          {% if request.tenant.on_trial == True %}
+          Yes
+          {% else %}
+          No
+          {% endif %}
+          </h5>
+
+          <a class="btn btn-warning" href="{% url 'accounts:update_user' pk=user.pk %}">Update</a>
+          {% else %}
+          <h5>You do not have permission to access this page.</h5>
+          {% endif %}
+					</div>
+				</div>
+			</div>
+    </div><!-- /.row -->
+
+{% endblock content %}

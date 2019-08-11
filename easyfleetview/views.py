@@ -93,7 +93,7 @@ def trialsignup(request):
             email.send()
             return redirect('signup_complete')
 
-    return render(request, 'index.html', {
+    return render(request, 'public_index.html', {
         'form': form_class,
     })
 

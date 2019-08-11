@@ -179,6 +179,11 @@ EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent-emails')
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+STRIPE_SECRET_KEY = 'sk_test_sHRawacwGnJpT6L9qOQn6EDZ00EcrEi7X6'
+STRIPE_PUBLISHABLE_KEY = 'pk_test_zneu65AuXI63juLnseZuuHNF00VxaDzoFf'
+
+SUBSCRIPTION_PRICE = 2000
+
 try:
     from .local_settings import *
 except ImportError:
