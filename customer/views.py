@@ -47,7 +47,7 @@ def billing_new(request):
         tenant = request.tenant
 
         BillingProfile.objects.create(tenant=tenant, email=customer.email, stripe_id=customer.id, subscription_id=subscription.id, plan='plan_FbzG7WVV6fWTLm')
-        return render(request, 'customer/billingprofile_form.html')
+        return render(request, 'customer/subscription_success.html')
 
 
 
@@ -60,7 +60,7 @@ def card_update(request):
            source = token,
        )
 
-       return render(request, 'customer/subscription_success.html')
+       return render(request, 'customer/customer_detal.html')
 
 def cancel_subscription(request):
     errors = []

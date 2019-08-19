@@ -40,7 +40,7 @@ Account Details
           
           <br>
           <div class="row">
-          {% if not request.tenant.subscription_expired  %}
+          {% if request.tenant.billing.subscription_active %}
           <form action="{% url 'client:card_update' %}" method="post">
           {% csrf_token %}
             <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"

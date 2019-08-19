@@ -55,10 +55,11 @@ class BillingProfile(models.Model):
         return date.fromtimestamp(subscription.current_period_end)
 
     @property
-    def subscription_expired(self):
+    def subscription_active(self):
         subscription = stripe.Subscription.retrieve(
             self.subscription_id)
-        return date.today() > date.fromtimestamp(subscription.created)
+        period_end = date.fromtimestamp(subscription.current_period_end)
+        return date.today() < period_end
 
     @property
     def get_card(self):
