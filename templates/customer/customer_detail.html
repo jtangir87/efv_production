@@ -16,23 +16,42 @@ Account Details
 	<div class="row">
 			<div class="col-md-6">
 				<div class="panel panel-primary">
-					<div class="panel-heading">{{request.tenant.name}}</div>
+					<div class="panel-heading">Billing Information</div>
           <div class="panel-body">
-          <h5><strong>Paid Until :</strong> {{ request.tenant.paid_until }}</h5>
-          <h5><strong>Created On :</strong> {{request.tenant.created_on }}</h5>
-          <h5><strong>On Trial: </strong>
+          <br>
           {% if request.tenant.on_trial == True %}
-          Yes
+          <h5> ENJOY YOUR TRIAL </h5>
           {% else %}
-          No
+          <h5><strong>Paid Until :</strong> {{ request.tenant.paid_until }}</h5>
+          <h5><strong>Date Joined :</strong> {{request.tenant.created_on }}</h5>
+          <br> 
+          <h5><strong>Cardholder Name :</strong> {{ request.tenant.billing.get_full_name}}</h5>
+          <h5><strong>Billing Address :</strong> {{ request.tenant.billing.address_one}}
+          {% if request.tenant.billing.address_two %}
+          , {{ request.tenant.billing.address_two}}
           {% endif %}
+          <p style="margin-left: 120px">               
+          {{ request.tenant.billing.city}}, {{ request.tenant.billing.state}} {{ request.tenant.billing.zip_code}}</p>
           </h5>
+          <h5><strong>Billing Email :</strong> {{ request.tenant.billing.email}}</h5>
 
-          <a class="btn btn-warning" href="{% url 'accounts:update_user' pk=user.pk %}">Update</a>
+          {% endif %}
+          
+          <br>
+          <a class="btn btn-primary" href="#">Update</a>
+          {% if request.tenant.subscription_expired  %}
+          <a class="btn btn-danger" href="{% url 'client:subscription_cancel_confirm' %}">Cancel Subscription</a>
+          {% else %}
+          <a class="btn btn-success" href="{% url 'client:billing_profile' %}">Sign Up!</a>
+          {% endif %}
           {% else %}
           <h5>You do not have permission to access this page.</h5>
           {% endif %}
-					</div>
+          
+
+            
+    
+        	</div>
 				</div>
 			</div>
     </div><!-- /.row -->

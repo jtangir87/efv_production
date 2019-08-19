@@ -1,60 +1,111 @@
 from customer.models import Client, BillingProfile
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render, render_to_response, redirect
+from django.template.context_processors import csrf
 from django.db import connection
-from .forms import BillingProfileForm
-from django.views.generic import DetailView, TemplateView, CreateView
+from django.contrib.auth.models import User
+from .forms import BillingProfileForm, BillingProfileFormTest
+from django.views.generic import DetailView, TemplateView, CreateView, UpdateView
+from django.contrib import messages
 from django_tenants.utils import tenant_context, parse_tenant_config_path, schema_context
 from django.contrib.auth import authenticate, login
 from django.forms.forms import NON_FIELD_ERRORS
 from django.conf import settings
 from django.urls import reverse
-
+import datetime
 import stripe
+from django.contrib.auth.decorators import login_required
+
 # Create your views here.
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
 
 class TenantDetail(TemplateView):
     model = Client
     template_name = 'customer/customer_detail.html'
-    
 
-def billing_new(request, template='customer/billingprofile_form.html'):
+
+def billing_new(request):
     if request.method == 'POST':
         form = BillingProfileForm(request.POST)
         if form.is_valid():
-            profile = form.save(commit=False)
-            profile.tenant = request.tenant
+            try:
+                profile = form.save(commit=False)
+                profile.tenant = request.tenant
+                cus = form.save()
 
-            # Create the User record
-            # Create BillingProfile Record
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            email = form.cleaned_data['email']
-            address_one = form.cleaned_data['address_one']
-            address_two = form.cleaned_data['address_two']
-            city = form.cleaned_data['city']
-            state = form.cleaned_data['state']
-            zip_code = form.cleaned_data['zip_code']
-            prof = BillingProfile(first_name=first_name, last_name=last_name, email=email,
-                 address_one=address_one, address_two=address_two,
-                    city=city, state=state, zip_code=zip_code, tenant=profile.tenant)
-            prof.save()
-            # Process payment (via Stripe)
-            # fee = settings.SUBSCRIPTION_PRICE
-            # try:
-            #     stripe_customer = prof.charge(request, email, fee)
-            # except stripe.StripeError as e:
-            #     form._errors[NON_FIELD_ERRORS] = form.error_class([e.args[0]])
-            #     return render(request, template,
-            #         {'form':form,
-            #         'STRIPE_PUBLISHABLE_KEY':settings.STRIPE_PUBLISHABLE_KEY}
-            #     )
-            # Auto login the user
-            return HttpResponseRedirect('/')
+                customer = stripe.Customer.create(
+                    email = cus.email,
+                    card = cus.stripe_id,
+                )
 
+                subscription = stripe.Subscription.create(
+                    customer = customer.id,
+                    plan = 'plan_FbzG7WVV6fWTLm',
+                )
+
+                cus.stripe_id = customer.id
+                cus.subscription_id = subscription.id
+                cus.plan = 'plan_FbzG7WVV6fWTLm'
+                cus.save()
+
+
+                return redirect('client:subscription_success')
+
+            except stripe.error.CardError as e:
+                form.add_error("The card has been declined")
     else:
         form = BillingProfileForm()
 
-    return render(request, template,
-        {'form':form,
-         'stripe_key':settings.STRIPE_PUBLISHABLE_KEY})
+    args = {}
+    args.update(csrf(request))
+    args['form'] = form
+    args['publishable'] = settings.STRIPE_PUBLISHABLE_KEY
+    args['months'] = range(1,13)
+    args['years'] = range(2019, 2039)
+    args['soon'] = datetime.date.today() + datetime.timedelta(days=30)
+
+    return render(request, 'customer/billingprofile_form.html', args)
+
+class BillingProfileTest(TemplateView):
+    template_name = 'customer/billingprofile_form_test.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["stripe_key"] = settings.STRIPE_PUBLISHABLE_KEY
+        return context
+    
+
+    # def subscribe(request):
+    #     if request.method == 'POST':
+    #         customer = stripe.Customer.create(
+
+    #         )
+
+
+
+def cancel_subscription(request):
+    errors = []
+
+    try:
+        sub = request.tenant.billing.subscription_id
+
+
+        stripe.Subscription.modify(sub, cancel_at_period_end=True)
+    
+
+    except stripe.error.CardError as e:
+        messages.error(request, e)
+
+    return render(request, 'customer/cancel_subscription_success.html')
+
+class SubscriptionSuccess(TemplateView):
+    template_name = 'customer/subscription_success.html'
+
+class SubscriptionCancelConfirm(TemplateView):
+    template_name = 'customer/cancel_subscription_confirm.html'
+    
+
+class SubscriptionCancelSuccess(TemplateView):
+    template_name = 'customer/cancel_subscription_complete.html'

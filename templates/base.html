@@ -18,7 +18,6 @@
     <link rel="stylesheet" type="text/css" media="screen" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/1.3.4/jquery.fancybox-1.3.4.css" /> 
 	  <!--Custom Font-->
 	  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
     <title>Easy Fleet View</title>
   </head>
   <body>
@@ -84,13 +83,6 @@
         {% else %}
 				<li><a href="{% url 'vehicles:damage_list' %}"><em class="fa fa-car-crash">&nbsp;</em> Damage Reports</a></li>
         {% endif %}
-        {% if request.user.is_staff == True %}
-        {% if 'accounts' in request.path and 'password' not in request.path and 'profile' not in request.path %}
-        <li class='active'><a href="{% url 'accounts:user_list' %}"><em class="fa fa-users-cog">&nbsp;</em> Users</a></li>
-        {% else %}
-        <li><a href="{% url 'accounts:user_list' %}"><em class="fa fa-users-cog">&nbsp;</em> Users</a></li>
-        {% endif %}
-        {% endif %}
         {% if 'profile' in request.path or 'password' in request.path and 'users' not in request.path %}
         <li class="parent active"><a data-toggle="collapse" href="#sub-item-1">
         <em class="far fa-user">&nbsp;</em> Profile <span data-toggle="collapse" href="#sub-item-1" class="icon pull-right"></span>
@@ -116,9 +108,22 @@
 							<span class="fas fa-key">&nbsp;</span> Change Password
 						</a></li>
 					</ul>
-				</li>       
+				</li>              
         {% endif %}
-
+        {% if request.user.is_staff == True %}
+        {% if 'accounts' in request.path and 'password' not in request.path and 'profile' not in request.path %}
+        <li class='active'><a href="{% url 'accounts:user_list' %}"><em class="fas fa-users">&nbsp;</em> Users</a></li>
+        {% else %}
+        <li><a href="{% url 'accounts:user_list' %}"><em class="fas fa-users">&nbsp;</em> Users</a></li>
+        {% endif %}
+        {% endif %}
+        {% if request.user.is_staff == True %}
+        {% if 'client' in request.path %}
+        <li class='active'><a href="{% url 'client:client_details' %}"><em class="fa fa-users-cog">&nbsp;</em>Account Info</a></li>
+        {% else %}
+        <li><a href="{% url 'client:client_details' %}"><em class="fa fa-users-cog">&nbsp;</em>Account Info</a></li>
+        {% endif %}
+        {% endif %}
 				<li><a href="{% url 'accounts:logout' %}"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>
 			</ul>
 		</div><!--/.sidebar-->
@@ -207,16 +212,5 @@
     <script src="{% static 'js/easypiechart-data.js'%}"></script>
     <script src="{% static 'js/bootstrap-datepicker.js'%}"></script>
     <script src="{% static 'js/custom.js'%}"></script>
-    <script>
-          window.onload = function () {
-        var chart1 = document.getElementById("line-chart").getContext("2d");
-        window.myLine = new Chart(chart1).Line(lineChartData, {
-        responsive: true,
-        scaleLineColor: "rgba(0,0,0,.2)",
-        scaleGridLineColor: "rgba(0,0,0,.05)",
-        scaleFontColor: "#c5c7cc"
-        });
-    };
-	</script>
   </body>
 </html>

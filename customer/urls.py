@@ -15,11 +15,19 @@ Including another URLconf
 """
 
 from django.urls import path
-from customer.views import TenantDetail, billing_new
+from customer.views import (
+    TenantDetail, billing_new, cancel_subscription, SubscriptionCancelSuccess, 
+    SubscriptionSuccess, SubscriptionCancelConfirm, BillingProfileTest
+)
 
 app_name = 'client'
 
 urlpatterns = [
     path('', TenantDetail.as_view(), name='client_details'),
-    path('billing', billing_new, name='billing_profile'),
+    path('billing/', billing_new, name='billing_profile'),
+    path('subscribe/', BillingProfileTest.as_view(), name='subscribe'),
+    path('billing/cancel/success', cancel_subscription, name='cancel_subscription'),
+    path('billing/cancel/', SubscriptionCancelConfirm.as_view(), name='subscription_cancel_confirm'), 
+    path('subscribe/success', SubscriptionSuccess.as_view(), name='subscription_success'),
+
 ]

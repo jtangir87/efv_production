@@ -1,6 +1,7 @@
 from django.db import models
 from django_tenants.models import TenantMixin, DomainMixin
 from django.conf import settings
+from datetime import datetime, date
 
 import stripe  
 
@@ -16,6 +17,10 @@ class Client(TenantMixin):
     def __str__(self):
         return self.name
 
+    @property
+    def subscription_expired(self):
+        return date.today() < self.paid_until
+
 class Domain(DomainMixin):
     pass
 
@@ -23,43 +28,24 @@ class Domain(DomainMixin):
         return self.domain
 
 class BillingProfile(models.Model):
-    tenant = models.OneToOneField("Client", on_delete=models.CASCADE)
+    tenant = models.OneToOneField("Client", related_name='billing' ,on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.EmailField(max_length=254)
     address_one = models.CharField(max_length=100)
     address_two = models.CharField(max_length=100, blank=True)
     city = models.CharField(max_length=50)
-    state = models.CharField(max_length=2)
+    state = models.CharField(max_length=15)
     zip_code = models.IntegerField()
-    stripe_id = models.CharField(max_length=30, blank=True)
+    stripe_id = models.CharField(max_length=255, blank=True)
+    plan = models.CharField(max_length=50, blank=True)
+    subscription_id = models.CharField(max_length=255, blank=True)
 
     class Meta:
         verbose_name_plural = 'subscriptions'
 
-    def charge(self, request, email, fee):
-        # Set your secret key: remember to change this to your live secret key
-        # in production. See your keys here https://manage.stripe.com/account
-        stripe.api_key = settings.STRIPE_SECRET_KEY
-
-        # Get the credit card details submitted by the form
-        token = request.POST['stripeToken']
-
-        # Create a Customer
-        stripe_customer = stripe.Customer.create(
-            card=token,
-            description=email
-        )
-
-        # Save the Stripe ID to the customer's profile
-        self.stripe_id = stripe_customer.id
-        self.save()
-
-        # Charge the Customer instead of the card
-        stripe.Charge.create(
-            amount=fee, # in cents
-            currency="usd",
-            customer=stripe_customer.id
-        )
-
-        return stripe_customer
+    def __str__(self):
+        return self.tenant.name + " - " + self.email
+    
+    def get_full_name(self):
+        return self.first_name + ' ' + self.last_name

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% load template_filters %}
+
+{% block breadcrumb %}
+<li class="active">Account</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+Account Details
+{% endblock header %}
+
+{% block content %}
+ {% if request.user.is_staff %}
+	<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">{{request.tenant.name}}</div>
+          <div class="panel-body">
+          <h5>Your subscription cancellation request is successful. Enjoy access to Easy Fleet View until the end of your billing cycle. If you want to reactivate your
+            your account please email <A HREF="mailto:support@easyfleetview.com">support@easyfleetview.com</A>. We will store your data for 90 days from the end of your billing cycle.</h5>
+          <a class="btn btn-danger" href="{% url 'client:cancel_subscription' %}">Cancel Subscription</a>
+          {% endif %}
+          
+          
+        	</div>
+				</div>
+			</div>
+    </div><!-- /.row -->
+
+{% endblock content %}
