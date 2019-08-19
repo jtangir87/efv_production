@@ -1,6 +1,6 @@
 from customer.models import Client, BillingProfile
 from django.conf import settings
-from django.shortcuts import render, render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.template.context_processors import csrf
 from django.db import connection
 from django.contrib.auth.models import User
@@ -14,7 +14,7 @@ from django.conf import settings
 from django.urls import reverse
 import datetime
 import stripe
-from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
 
@@ -67,22 +67,6 @@ def billing_new(request):
     args['soon'] = datetime.date.today() + datetime.timedelta(days=30)
 
     return render(request, 'customer/billingprofile_form.html', args)
-
-class BillingProfileTest(TemplateView):
-    template_name = 'customer/billingprofile_form_test.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["stripe_key"] = settings.STRIPE_PUBLISHABLE_KEY
-        return context
-    
-
-    # def subscribe(request):
-    #     if request.method == 'POST':
-    #         customer = stripe.Customer.create(
-
-    #         )
-
 
 
 def cancel_subscription(request):
