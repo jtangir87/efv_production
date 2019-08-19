@@ -17,17 +17,17 @@ Including another URLconf
 from django.urls import path
 from customer.views import (
     TenantDetail, billing_new, cancel_subscription, SubscriptionCancelSuccess, 
-    SubscriptionSuccess, SubscriptionCancelConfirm, BillingProfileTest
+    SubscriptionSuccess, SubscriptionCancelConfirm, card_update
 )
 
 app_name = 'client'
 
 urlpatterns = [
     path('', TenantDetail.as_view(), name='client_details'),
-    path('billing/', billing_new, name='billing_profile'),
-    path('subscribe/', BillingProfileTest.as_view(), name='subscribe'),
-    path('billing/cancel/success', cancel_subscription, name='cancel_subscription'),
-    path('billing/cancel/', SubscriptionCancelConfirm.as_view(), name='subscription_cancel_confirm'), 
+    path('subscribe/', billing_new, name='subscribe'),
+    path('billing/update-card', card_update, name='card_update'),
+    path('subscription/cancel/success', cancel_subscription, name='cancel_subscription'),
+    path('subscription/cancel/', SubscriptionCancelConfirm.as_view(), name='subscription_cancel_confirm'), 
     path('subscribe/success', SubscriptionSuccess.as_view(), name='subscription_success'),
 
 ]

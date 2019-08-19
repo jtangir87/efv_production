@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% load template_filters %}
+
+{% block breadcrumb %}
+<li class="active">Account</li>
+{% endblock breadcrumb %}
+
+{% block header %}
+Account Details
+{% endblock header %}
+
+{% block content %}
+ {% if request.user.is_staff %}
+	<div class="row">
+			<div class="col-md-6">
+				<div class="panel panel-primary">
+					<div class="panel-heading">{{request.tenant.name}}</div>
+          <div class="panel-body">
+          <h5>Your payment method has been successfully updated! If you have any qusestions please email:<A HREF="mailto:support@easyfleetview.com">
+		  support@easyfleetview.com</a>. </h5>
+          {% endif %}
+          
+          
+        	</div>
+				</div>
+			</div>
+    </div><!-- /.row -->
+
+{% endblock content %}

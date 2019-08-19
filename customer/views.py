@@ -4,8 +4,8 @@ from django.shortcuts import render, redirect
 from django.template.context_processors import csrf
 from django.db import connection
 from django.contrib.auth.models import User
-from .forms import BillingProfileForm, BillingProfileFormTest
-from django.views.generic import DetailView, TemplateView, CreateView, UpdateView
+from .forms import BillingProfileForm
+from django.views.generic import DetailView, TemplateView, CreateView, UpdateView, FormView
 from django.contrib import messages
 from django_tenants.utils import tenant_context, parse_tenant_config_path, schema_context
 from django.contrib.auth import authenticate, login
@@ -25,49 +25,42 @@ class TenantDetail(TemplateView):
     model = Client
     template_name = 'customer/customer_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["stripe_key"] = settings.STRIPE_PUBLISHABLE_KEY
+        return context
+    
+
 
 def billing_new(request):
     if request.method == 'POST':
-        form = BillingProfileForm(request.POST)
-        if form.is_valid():
-            try:
-                profile = form.save(commit=False)
-                profile.tenant = request.tenant
-                cus = form.save()
+        customer = stripe.Customer.create(
+            email = request.POST['stripeEmail'],
+            source = request.POST['stripeToken'],
+        )
 
-                customer = stripe.Customer.create(
-                    email = cus.email,
-                    card = cus.stripe_id,
-                )
+        subscription = stripe.Subscription.create(
+            customer = customer.id,
+            plan = 'plan_FbzG7WVV6fWTLm',
+        )
 
-                subscription = stripe.Subscription.create(
-                    customer = customer.id,
-                    plan = 'plan_FbzG7WVV6fWTLm',
-                )
+        tenant = request.tenant
 
-                cus.stripe_id = customer.id
-                cus.subscription_id = subscription.id
-                cus.plan = 'plan_FbzG7WVV6fWTLm'
-                cus.save()
+        BillingProfile.objects.create(tenant=tenant, email=customer.email, stripe_id=customer.id, subscription_id=subscription.id, plan='plan_FbzG7WVV6fWTLm')
+        return render(request, 'customer/billingprofile_form.html')
 
 
-                return redirect('client:subscription_success')
 
-            except stripe.error.CardError as e:
-                form.add_error("The card has been declined")
-    else:
-        form = BillingProfileForm()
+def card_update(request):
+   if request.method == 'POST':
+       customer = request.tenant.billing.stripe_id
+       token = request.POST['stripeToken']
+       charge = stripe.Customer.modify(
+           customer, 
+           source = token,
+       )
 
-    args = {}
-    args.update(csrf(request))
-    args['form'] = form
-    args['publishable'] = settings.STRIPE_PUBLISHABLE_KEY
-    args['months'] = range(1,13)
-    args['years'] = range(2019, 2039)
-    args['soon'] = datetime.date.today() + datetime.timedelta(days=30)
-
-    return render(request, 'customer/billingprofile_form.html', args)
-
+       return render(request, 'customer/subscription_success.html')
 
 def cancel_subscription(request):
     errors = []
@@ -93,3 +86,4 @@ class SubscriptionCancelConfirm(TemplateView):
 
 class SubscriptionCancelSuccess(TemplateView):
     template_name = 'customer/cancel_subscription_complete.html'
+
