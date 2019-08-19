@@ -182,7 +182,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 STRIPE_SECRET_KEY = 'sk_test_sHRawacwGnJpT6L9qOQn6EDZ00EcrEi7X6'
 STRIPE_PUBLISHABLE_KEY = 'pk_test_zneu65AuXI63juLnseZuuHNF00VxaDzoFf'
 
-SUBSCRIPTION_PRICE = 2000
+STRIPE_MONTHLY_PLAN = 'plan_FbzG7WVV6fWTLm'
 
 try:
     from .local_settings import *

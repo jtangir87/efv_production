@@ -41,7 +41,7 @@ def billing_new(request):
 
         subscription = stripe.Subscription.create(
             customer = customer.id,
-            plan = 'plan_FbzG7WVV6fWTLm',
+            plan = settings.STRIPE_MONTHLY_PLAN,
         )
 
         tenant = request.tenant
