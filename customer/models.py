@@ -32,6 +32,19 @@ class BillingProfile(models.Model):
     stripe_id = models.CharField(max_length=255, blank=True)
     plan = models.CharField(max_length=50, blank=True)
     subscription_id = models.CharField(max_length=255, blank=True)
+    # Card on File
+    name_on_card = models.CharField(max_length=255, blank=True, null=True)
+    street_one = models.CharField(max_length=255, blank=True, null=True)
+    street_two = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=255, blank=True, null=True)
+    state = models.CharField(max_length=50, blank=True, null=True)
+    zip = models.CharField(max_length=255, blank=True, null=True)
+    brand = models.CharField(max_length=50, blank=True, null=True)
+    last_4 = models.CharField(max_length=4, blank=True, null=True)
+    paid_until = models.DateField(blank=True, null=True)
+    canceled = models.BooleanField(blank=True, null=True)
+
+
 
     class Meta:
         verbose_name_plural = 'subscriptions'
@@ -56,17 +69,7 @@ class BillingProfile(models.Model):
 
     @property
     def subscription_active(self):
-        subscription = stripe.Subscription.retrieve(
-            self.subscription_id)
-        period_end = date.fromtimestamp(subscription.current_period_end)
-        return date.today() < period_end
-
-    @property
-    def get_card(self):
-        customer = stripe.Customer.retrieve(
-            self.stripe_id)
-        card = customer.sources.retrieve(customer.default_source)
-        return card
+        return date.today() <= self.paid_until
 
     @property
     def get_account_email(self):

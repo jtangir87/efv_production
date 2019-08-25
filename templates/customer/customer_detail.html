@@ -22,25 +22,28 @@ Account Details
           {% if request.tenant.on_trial == True %}
           <h5> ENJOY YOUR TRIAL </h5>
           {% else %}
-          <h5><strong>Paid Until :</strong> {{ request.tenant.billing.get_next_billing_date }}</h5>
-          <h5><strong>Date Joined :</strong> {{ request.tenant.billing.get_created_date }}</h5>
+          {% if request.tenant.billing.canceled == True %}
+          <h5>We are sorry you are cancelling! Enjoy access until {{ request.tenant.billing.paid_until }}
+          <br>
+          {% else %}
+          <h5><strong>Next Billing :</strong> {{ request.tenant.billing.paid_until }}</h5>
           <br> 
-          <h5><strong>Card on File :</strong> {{ request.tenant.billing.get_card.brand }} ending in {{ request.tenant.billing.get_card.last4 }}</h5>
-          <h5><strong>Cardholder Name :</strong> {{ request.tenant.billing.get_card.name }}</h5>
+          <h5><strong>Card on File :</strong> {{ request.tenant.billing.brand | title }} ending in {{ request.tenant.billing.last_4 }}</h5>
+          <h5><strong>Cardholder Name :</strong> {{ request.tenant.billing.name_on_card }}</h5>
           <h5><strong>Email :</strong> {{ request.tenant.billing.get_account_email }}</h5>
-          <h5><strong>Billing Address :</strong> {{ request.tenant.billing.get_card.address_line1 }}
-          {% if request.tenant.billing.get_card.address_line2 %}
-          , {{ request.tenant.billing.get_card.address_line2 }}
+          <h5><strong>Billing Address :</strong> {{ request.tenant.billing.street_one }}
+          {% if request.tenant.billing.street_two %}
+          , {{ request.tenant.billing.street_two }}
           {% endif %}
           <p style="margin-left: 120px">               
-          {{ request.tenant.billing.get_card.address_city}}, {{ request.tenant.billing.get_card.address_state }} {{ request.tenant.billing.get_card.address_zip }}</p>
+          {{ request.tenant.billing.city}}, {{ request.tenant.billing.state }} {{ request.tenant.billing.zip }}</p>
           </h5>
-          
+          {% endif %}
           {% endif %}
           
           <br>
           <div class="row">
-          {% if request.tenant.billing.subscription_active %}
+          {% if request.tenant.billing.subscription_active and request.tenant.billing.canceled != True %}
           <form action="{% url 'client:card_update' %}" method="post">
           {% csrf_token %}
             <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
@@ -54,7 +57,7 @@ Account Details
             </script>
           </form>
           <a class="btn btn-danger" href="{% url 'client:subscription_cancel_confirm' %}">Cancel Subscription</a>
-          {% else %}
+          {% elif not request.tenant.billing %}
           <form action="{% url 'client:subscribe' %}" method="post">
           {% csrf_token %}
             <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
@@ -66,6 +69,25 @@ Account Details
               data-locale="auto">
             </script>
           </form>
+          {% else %}
+          {% if request.tenant.billing.subscription_active %}
+          <a class="btn btn-primary" href="{% url 'client:reactivate_account' %}">Reactivate</a>
+          
+          {% else %}
+          
+          <form action="{% url 'client:reactivate_account' %}" method="post">
+          {% csrf_token %}
+            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+              data-key="{{stripe_key}}"
+              data-billing-address=True
+              data-allow-remember-me=False
+              data-email='{{request.tenant.billing.email}}'
+              data-label='Reactivate'
+              data-panel-label='Reactivate'
+              data-locale="auto">
+            </script>
+          </form>
+          {% endif %}
           </div>
           {% endif %}
           {% else %}

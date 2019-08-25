@@ -12,6 +12,8 @@ from django.contrib.auth import authenticate, login
 from django.forms.forms import NON_FIELD_ERRORS
 from django.conf import settings
 from django.urls import reverse
+from django.http import HttpResponse
+import json
 import datetime
 import stripe
 
@@ -46,7 +48,13 @@ def billing_new(request):
 
         tenant = request.tenant
 
-        BillingProfile.objects.create(tenant=tenant, email=customer.email, stripe_id=customer.id, subscription_id=subscription.id, plan='plan_FbzG7WVV6fWTLm')
+        BillingProfile.objects.create(
+            tenant=tenant, 
+            email=customer.email, 
+            stripe_id=customer.id, 
+            subscription_id=subscription.id, 
+            plan=subscription.plan.id,
+            )
         return render(request, 'customer/subscription_success.html')
 
 
@@ -60,7 +68,7 @@ def card_update(request):
            source = token,
        )
 
-       return render(request, 'customer/customer_detal.html')
+       return render(request, 'customer/card_update_success.html')
 
 def cancel_subscription(request):
     errors = []
@@ -77,6 +85,37 @@ def cancel_subscription(request):
 
     return render(request, 'customer/cancel_subscription_success.html')
 
+def reactivate_account(request):
+    errors = []
+
+    try:
+        sub = request.tenant.billing.subscription_id
+
+
+        stripe.Subscription.modify(sub, cancel_at_period_end=False)
+    
+
+    except stripe.error.CardError as e:
+        messages.error(request, e)
+
+    return render(request, 'customer/customer_detail.html')
+
+def reactivate_expired_subscription(request):
+    if request.method == 'POST':
+        customer = request.tenant.billing
+        subscription = stripe.Subscription.create(
+            customer = customer.stripe_id,
+            plan = settings.STRIPE_MONTHLY_PLAN,
+        )
+
+
+        BillingProfile.objects.filter(stripe_id=customer.stripe_id).update(
+            subscription_id=subscription.id, 
+            plan=subscription.plan.id,
+            )
+        return render(request, 'customer/subscription_success.html')
+
+
 class SubscriptionSuccess(TemplateView):
     template_name = 'customer/subscription_success.html'
 
@@ -86,4 +125,3 @@ class SubscriptionCancelConfirm(TemplateView):
 
 class SubscriptionCancelSuccess(TemplateView):
     template_name = 'customer/cancel_subscription_complete.html'
-

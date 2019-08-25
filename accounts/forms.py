@@ -7,7 +7,7 @@ class UserSignUpForm(UserCreationForm):
     phone_number = forms.CharField(required=True)
 
     class Meta:
-        fields = ('username','first_name','last_name','email','phone_number', 'password1','password2')
+        fields = ('username','first_name','last_name','email', 'password1','password2')
         model = get_user_model()
 
     def __init__(self,*args,**kwargs):
@@ -16,7 +16,6 @@ class UserSignUpForm(UserCreationForm):
 
 
 class CreateUserForm(UserCreationForm):
-    phone_number = forms.CharField(required=True)
 
     class Meta:
         model = User
@@ -25,7 +24,6 @@ class CreateUserForm(UserCreationForm):
             'first_name',
             'last_name',
             'email',
-            'phone_number', 
             'is_staff',
         ]
         help_texts = {
@@ -35,7 +33,6 @@ class CreateUserForm(UserCreationForm):
         }
 
 class UpdateUserForm(UserChangeForm):
-    phone_number = forms.CharField(required=True)
 
     class Meta:
         model = User
@@ -44,7 +41,6 @@ class UpdateUserForm(UserChangeForm):
             'first_name',
             'last_name',
             'email',
-            'phone_number', 
             'is_staff',
             'is_active',
         ]
@@ -64,7 +60,6 @@ class UpdateCurrentUserForm(UserChangeForm):
             'first_name',
             'last_name',
             'email',
-            'phone_number', 
         ]
         help_texts = {
             'username': "Required. Letters, digits and @/./+/-/_ only.",

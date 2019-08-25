@@ -17,7 +17,8 @@ Including another URLconf
 from django.urls import path
 from customer.views import (
     TenantDetail, billing_new, cancel_subscription, SubscriptionCancelSuccess, 
-    SubscriptionSuccess, SubscriptionCancelConfirm, card_update
+    SubscriptionSuccess, SubscriptionCancelConfirm, card_update, reactivate_account,
+    reactivate_expired_subscription,
 )
 
 app_name = 'client'
@@ -28,6 +29,8 @@ urlpatterns = [
     path('billing/update-card', card_update, name='card_update'),
     path('subscription/cancel/success', cancel_subscription, name='cancel_subscription'),
     path('subscription/cancel/', SubscriptionCancelConfirm.as_view(), name='subscription_cancel_confirm'), 
+    path('subscription/reactivate/', reactivate_account, name='reactivate_account'), 
+    path('subscription/expired/reactivate', reactivate_expired_subscription, name='reactivate_expired'),
     path('subscribe/success', SubscriptionSuccess.as_view(), name='subscription_success'),
 
 ]

@@ -22,5 +22,6 @@ urlpatterns = [
     path('superadmin/', admin.site.urls),
     path('', views.trialsignup, name='public'),
     path('submitted', SignUpComplete.as_view(), name='signup_complete'),
+    path('stripe/webhook', views.stripe_webhooks, name='stripe_webhook'),
 
 ]

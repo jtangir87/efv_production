@@ -29,29 +29,8 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span></button>
 				<a class="navbar-brand" href="{% url 'dashboard' %}"><span>Easy</span>FleetView</a>
-        {% if user.is_authenticated %}
-				{% comment %} <ul class="nav navbar-top-links navbar-right">
-					<li class="dropdown"><a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-						<em class="far fa-user"></em><span class="label label-info"></span>
-					</a>
-						<ul class="dropdown-menu">
-							<li><a href="{% url 'accounts:user_detail' pk=request.user.pk %}">
-								<div><em class="far fa-id-card"></em> Profile
-								</div>
-							</a></li>
-							<li class="divider"></li>
-							<li><a href="{% url 'accounts:password_change' %}">
-								<div><em class="fas fa-key"></em> Change Password
-								</div>
-							</a></li>
-							<li class="divider"></li>
-							<li><a href="{% url 'accounts:logout' %}">
-								<div><em class="fa fa-power-off"></em> Log Out
-								</div>
-							</a></li>
-						</ul>
-					</li>
-				</ul> {% endcomment %}
+        {% if user.is_authenticated and request.tenant.billing.subscription_active %}
+
 			</div>
 		</div><!-- /.container-fluid -->
 	</nav>
@@ -127,38 +106,7 @@
 				<li><a href="{% url 'accounts:logout' %}"><em class="fa fa-power-off">&nbsp;</em> Logout</a></li>
 			</ul>
 		</div><!--/.sidebar-->
-{% comment %} 
 
-    <div class="" style='margin-bottom:25px;'>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-          <div class="container">
-            <a class="navbar-brand" href="{% url 'dashboard' %}"><img src="{% static 'img/fleet-icon-2.png'%}" class="logo" alt="" ></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-              <div class="navbar-nav">
-                <a class="nav-item nav-link active" href="{% url 'dashboard' %}">Home <span class="sr-only">(current)</span></a>
-                {% if user.is_authenticated %}
-      
-                <a class="nav-item nav-link" href="{% url 'vehicles:vehicle_list' %}">Vehicles</a>
-                <a class="nav-item nav-link" href="{% url 'fuellog:entry_list' %}">Fuel Log</a>
-                <a class="nav-item nav-link" href="{% url 'service:service_list' %}">Service</a>
-                <a class="nav-item nav-link" href="{% url 'vehicles:damage_list' %}">Damage Report</a>
-                {% if request.user.is_staff == True %}
-                <a class="nav-item nav-link" href="{% url 'accounts:user_list' %}">Users</a>
-                {% endif %}
-                <a class="nav-item nav-link" href="{% url 'accounts:password_change' %}">Change Password</a>
-                <a class="nav-item nav-link" href="{% url 'accounts:logout' %}">Logout</a>
-                {% else %}
-                <a class="nav-item nav-link" href="{% url 'accounts:login' %}">Login</a>
-                <a class="nav-item nav-link" href="{% url 'accounts:signup' %}">Sign Up</a>
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        </nav>
-    </div> {% endcomment %}
     {%endif%}
     <div class="col-sm-12 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
   		<div class="row">
@@ -176,10 +124,46 @@
     {% block header %}{% endblock header %} </h1> </div>
     </div>
 
-
+    {% if user.is_authenticated and request.tenant.billing.subscription_active %}
+    
+    
     {% block content %}
     {% endblock content %}
 
+    {% elif user.is_authenticated %}
+     <h3>Your account is not currently active. This could be because your trial has ended or there is an issue with your payment method. Your data has not been lost. Please use this button to subscribe.</h3>
+     <h5>If page does not reload after 30 seconds after payment, please click <a href="{% url 'dashboard' %}">here</a></h5>
+     {% if request.tenant.billing %}
+      <form action="{% url 'client:card_update' %}" method="post">
+      {% csrf_token %}
+        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+          data-key="{{stripe_key}}"
+          data-billing-address=True
+          data-allow-remember-me=False
+          data-email='{{request.tenant.billing.email}}'
+          data-label='Update Card'
+          data-panel-label='Update'
+          data-locale="auto">
+        </script>
+      </form>
+    {% else %}
+      <form action="{% url 'client:subscribe' %}" method="post">
+      {% csrf_token %}
+        <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+          data-key="{{stripe_key}}"
+          data-billing-address=True
+          data-allow-remember-me=False
+          data-label='Subscribe'
+          data-panel-label='Submit'
+          data-locale="auto">
+        </script>
+      </form>
+    {% endif %}
+
+    {%else%}
+    {% block login %}
+    {% endblock login %}
+    {% endif %}
 
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
       <script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>

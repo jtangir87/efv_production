@@ -12,6 +12,11 @@ from django.db.models import Sum
 from django.db.models.functions import Extract
 from datetime import datetime, date, timedelta
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from customer.models import BillingProfile
+from django.conf import settings
+import json
+import stripe
 
 class Dashboard(ListView):
     model = FuelEntry
@@ -36,6 +41,7 @@ class Dashboard(ListView):
         #Calculate lifetime service total
         lifetime_serv_total = ServiceRecord.objects.all().aggregate(Sum('cost'))
         context['lifetime_serv_total'] = lifetime_serv_total['cost__sum']
+        context["stripe_key"] = settings.STRIPE_PUBLISHABLE_KEY
 
         return context
 
@@ -97,3 +103,60 @@ def trialsignup(request):
         'form': form_class,
     })
 
+
+# STRIPE WEBHOOOKS
+
+@csrf_exempt
+def stripe_webhooks(request):
+  payload = request.body
+  event = None
+
+  try:
+    event = stripe.Event.construct_from(
+      json.loads(payload), stripe.api_key
+    )
+  except ValueError as e:
+    # Invalid payload
+    return HttpResponse(status=400)
+
+  # Handle the event
+  if event.type == 'payment_method.attached':
+    payment_method = event.data.object # contains a stripe.PaymentMethod
+    customer = payment_method.customer
+    BillingProfile.objects.filter(stripe_id=customer).update(
+        name_on_card = payment_method.billing_details.name,
+        street_one = payment_method.billing_details.address.line1,
+        street_two = payment_method.billing_details.address.line2,
+        city = payment_method.billing_details.address.city,
+        state = payment_method.billing_details.address.state,
+        zip = payment_method.billing_details.address.postal_code,
+        brand = payment_method.card.brand,
+        last_4 = payment_method.card.last4,
+    )  
+  elif event.type == 'customer.subscription.created':
+    sub = event.data.object # contains a stripe.Invoice
+    customer = sub.customer
+    next_payment = date.fromtimestamp(sub.current_period_end)
+    BillingProfile.objects.filter(stripe_id=customer).update(paid_until=next_payment)
+
+  elif event.type == 'customer.subscription.updated':
+    sub = event.data.object # contains a stripe.Invoice
+    customer = sub.customer
+    next_payment = date.fromtimestamp(sub.current_period_end)
+    BillingProfile.objects.filter(stripe_id=customer).update(paid_until=next_payment, canceled=sub.cancel_at_period_end)
+
+  elif event.type == 'customer.updated':
+    update = event.data.object
+    customer = update.id
+    prof = BillingProfile.objects.get(stripe_id=customer)
+    sub_id = prof.subscription_id
+    stripe_subscription = stripe.Subscription.retrieve(sub_id)
+    next_payment = date.fromtimestamp(stripe_subscription.current_period_end)
+    BillingProfile.objects.filter(stripe_id=customer).update(email=update.email, paid_until=next_payment)
+
+  
+  else:
+    # Unexpected event type
+    return HttpResponse(status=400)
+
+  return HttpResponse(status=200)
