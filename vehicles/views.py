@@ -119,3 +119,7 @@ class VehicleDamageList(ListView):
         context["vehicle"] = Vehicle.objects.get(id=vehicle_id)
         context["all_damage"] = DamageReport.objects.filter(vehicle_id=vehicle_id).order_by('-date') 
         return context
+
+class DeleteDamage(DeleteView):
+    model = DamageReport
+    success_url = reverse_lazy('vehicles:damage_list')

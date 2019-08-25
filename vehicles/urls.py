@@ -17,7 +17,7 @@ Including another URLconf
 from django.urls import path
 from vehicles import views
 from vehicles.views import (VehicleList, CreateVehicle, UpdateVehicle, VehicleDetail,
-    DeleteVehicle, DamageList, DamageDetail, VehicleDamageList)
+    DeleteVehicle, DamageList, DamageDetail, VehicleDamageList, DeleteDamage)
 
 app_name = 'vehicles'
 
@@ -28,6 +28,7 @@ urlpatterns = [
     path('<int:pk>', VehicleDetail.as_view(), name='vehicle_detail'),
     path('delete/<int:pk>', DeleteVehicle.as_view(), name='delete_vehicle'),
     path('damage', DamageList.as_view(), name='damage_list'),
+    path('damage/delete/<int:pk>', DeleteDamage.as_view(), name='delete_damage'),
     path('damage/new', views.new_damage, name='new_damage'),
     path('damage/<int:pk>', DamageDetail.as_view(), name='damage_detail'),
     path('damage/vehicle/<int:pk>/all/', VehicleDamageList.as_view(), name='vehicle_all_damage'),
