@@ -29,7 +29,7 @@
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span></button>
 				<a class="navbar-brand" href="{% url 'dashboard' %}"><span>Easy</span>FleetView</a>
-        {% if user.is_authenticated and request.tenant.billing.subscription_active or request.tenant.on_trial == True %}
+        {% if user.is_authenticated and request.tenant.billing.subscription_active or user.is_authenticated and request.tenant.on_trial == True %}
 
 			</div>
 		</div><!-- /.container-fluid -->
@@ -124,7 +124,7 @@
     {% block header %}{% endblock header %} </h1> </div>
     </div>
 
-    {% if user.is_authenticated and request.tenant.billing.subscription_active or request.tenant.on_trial == True %}
+    {% if user.is_authenticated and request.tenant.billing.subscription_active or user.is_authenticated and request.tenant.on_trial == True %}
     
     
     {% block content %}
