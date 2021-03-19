@@ -14,7 +14,7 @@ idna==2.8
 ipapi==0.5.2
 localflavor==1.8
 oauthlib==3.0.1
-Pillow==6.0.0
+Pillow==8.1.1
 psycopg2==2.7.6.1
 psycopg2-binary==2.8.3
 python3-openid==3.1.0
