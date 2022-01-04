@@ -25,6 +25,7 @@
           <h5><strong>VIN :</strong> {{vehicle.vin}}</h5>
           <h5><strong>License Plate :</strong> {{vehicle.license_plate}}</h5>
           <h5><strong>Purchase Date :</strong> {{vehicle.purchase_date}}</h5>
+          <h5><strong>Title # :</strong> {{vehicle.title_num|default_if_none:""}}</h5>
           <h5><strong>Current Mileage :</strong> {{vehicle.current_mileage | intcomma}}</h5>
           {% if request.user.is_staff %}
           <a class="btn btn-warning" href="{% url 'vehicles:update_vehicle' pk=vehicle.pk %}">Update</a>

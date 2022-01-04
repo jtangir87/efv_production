@@ -12,25 +12,31 @@ from datetime import datetime
 from django.db.models import Sum
 
 # Create your views here.
+
+
 class VehicleList(ListView):
     model = Vehicle
     paginate_by = 25
 
 
-
 class CreateVehicle(CreateView):
     model = Vehicle
-    fields = ["name", 'make', 'model', 'year', 'vin', 'gvw', 'license_plate', 'purchase_date', 'current_mileage']
+    fields = ["name", 'make', 'model', 'year', 'vin', 'gvw',
+              'license_plate', 'purchase_date', 'title_num', 'current_mileage']
 
     def get_form(self):
         form = super().get_form()
-        form.fields['purchase_date'].widget = DateTimePickerInput(format='%m-%d-%Y')
+        form.fields['purchase_date'].widget = DateTimePickerInput(
+            format='%m-%d-%Y')
         return form
+
 
 class UpdateVehicle(UpdateView):
     model = Vehicle
-    fields = ["name", 'make', 'model', 'year', 'vin', 'gvw','license_plate', 'purchase_date', 'current_mileage']
+    fields = ["name", 'make', 'model', 'year', 'vin', 'gvw',
+              'license_plate', 'purchase_date', 'title_num', 'current_mileage']
     template_name_suffix = '_update_form'
+
 
 class VehicleDetail(DetailView):
     model = Vehicle
@@ -40,20 +46,23 @@ class VehicleDetail(DetailView):
         context = super(VehicleDetail, self).get_context_data(**kwargs)
         pk = self.kwargs['pk']
         context['fuel_entries'] = FuelEntry.objects.filter(vehicle_id=pk)
-        context['service_records'] = ServiceRecord.objects.filter(vehicle_id=pk)
+        context['service_records'] = ServiceRecord.objects.filter(
+            vehicle_id=pk)
         context['damage_reports'] = DamageReport.objects.filter(vehicle_id=pk)
-        #Calculate ytd fuel total
+        # Calculate ytd fuel total
         today = datetime.now()
-        ytd_fuel_total = FuelEntry.objects.filter(vehicle_id=pk, date__year=today.year).aggregate(Sum('cost'))
+        ytd_fuel_total = FuelEntry.objects.filter(
+            vehicle_id=pk, date__year=today.year).aggregate(Sum('cost'))
         context['ytd_fuel_total'] = ytd_fuel_total['cost__sum']
-        #Calculate ytd service total
+        # Calculate ytd service total
         today = datetime.now()
-        ytd_serv_total = ServiceRecord.objects.filter(vehicle_id=pk, date__year=today.year).aggregate(Sum('cost'))
+        ytd_serv_total = ServiceRecord.objects.filter(
+            vehicle_id=pk, date__year=today.year).aggregate(Sum('cost'))
         context['ytd_serv_total'] = ytd_serv_total['cost__sum']
-        #Calculate lifetime service total
-        lifetime_serv_total = ServiceRecord.objects.filter(vehicle_id=pk).aggregate(Sum('cost'))
+        # Calculate lifetime service total
+        lifetime_serv_total = ServiceRecord.objects.filter(
+            vehicle_id=pk).aggregate(Sum('cost'))
         context['lifetime_serv_total'] = lifetime_serv_total['cost__sum']
-
 
         return context
 
@@ -68,8 +77,10 @@ class DamageList(ListView):
     model = DamageReport
     paginate_by = 25
 
+
 def new_damage(request):
-    ImageFormset = modelformset_factory(DamageImages, fields=('image',), extra=5)
+    ImageFormset = modelformset_factory(
+        DamageImages, fields=('image',), extra=5)
     if request.method == 'POST':
         if request.user.is_authenticated:
             form = DamageForm(request.POST)
@@ -81,7 +92,8 @@ def new_damage(request):
 
                 for f in formset:
                     try:
-                        photo = DamageImages(report=report, image=f.cleaned_data['image'])
+                        photo = DamageImages(
+                            report=report, image=f.cleaned_data['image'])
                         photo.save()
                     except Exception as e:
                         break
@@ -91,10 +103,11 @@ def new_damage(request):
         formset = ImageFormset(queryset=DamageImages.objects.none())
 
     context = {
-        'form':form,
-        'formset':formset,
+        'form': form,
+        'formset': formset,
     }
     return render(request, 'vehicles/damagereport_form.html', context)
+
 
 class DamageDetail(DetailView):
     model = DamageReport
@@ -107,7 +120,6 @@ class DamageDetail(DetailView):
         return context
 
 
-
 class VehicleDamageList(ListView):
     model = DamageReport
     paginate_by = 25
@@ -117,8 +129,10 @@ class VehicleDamageList(ListView):
         context = super(VehicleDamageList, self).get_context_data(**kwargs)
         vehicle_id = self.kwargs['pk']
         context["vehicle"] = Vehicle.objects.get(id=vehicle_id)
-        context["all_damage"] = DamageReport.objects.filter(vehicle_id=vehicle_id).order_by('-date') 
+        context["all_damage"] = DamageReport.objects.filter(
+            vehicle_id=vehicle_id).order_by('-date')
         return context
+
 
 class DeleteDamage(DeleteView):
     model = DamageReport
